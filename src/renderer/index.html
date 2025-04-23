@@ -1,41 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Test Runner UI</title>
-</head>
+<div id="head"></div>
 <body>
-  <h1>🧪 Edge Sdk Automation Test Runner</h1>
-  <div id="header"></div>
+  <div id="content"></div>
   <script type="module" src="./script.js"></script>
-
-  <!-- <script>
-    const profileInput = document.getElementById("profileInput");
-    const profileFileName = document.getElementById("profileFileName");
-    const apkInput = document.getElementById("apkInput");
-    const apkFileName = document.getElementById("apkFileName");
-
-    profileInput.addEventListener("change", () => {
-    profileFileName.textContent = profileInput.files?.[0]?.name || "No file selected";
-  
-     updateButtonState();
-    })
-
-
-    apkInput.addEventListener("change", () => {
-      console.log(`Selected: ${apkInput.files?.[0]?.name}`)
-      apkFileName.textContent = apkInput.files?.[0]?.name || "No file selected";
-  
-      updateButtonState();
-    });
-
-
-    function updateButtonState() {
-      const profileSelected = profileInput.files?.length > 0;
-      const apkSelected = apkInput.files?.length > 0;
-
-      runBtn.disabled = !(profileSelected && apkSelected);
-    }
-  </script> -->
 </body>
 </html>

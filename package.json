@@ -4,10 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && electron dist/main.js",
-    "build": "tsc"
+    "start": "npm run build && npm run copy-assets && electron dist/main.js",
+    "build": "tsc",
+    "copy-assets": "./scripts/copy-assets"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",

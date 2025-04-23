@@ -1,19 +1,20 @@
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { spawn } from "child_process";
 import path from "path";
-import { fileURLToPath } from 'url';
 
 const createWindow = () => {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename); // get the name of the directory
   console.log(`create window: ${__dirname}`);
+  let preloadPath = path.join(__dirname, "preload.js");
+  console.log(`preloadPath: ${preloadPath}`);
+  
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
+      sandbox: false,
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, "preload.js"),
+      preload: preloadPath,
     },
   });
   win.loadFile("renderer/index.html");

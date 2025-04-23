@@ -1,0 +1,2 @@
+echo "copy html assets to renderer"
+mkdir -p dist/renderer && cp src/renderer/*.html dist/renderer/

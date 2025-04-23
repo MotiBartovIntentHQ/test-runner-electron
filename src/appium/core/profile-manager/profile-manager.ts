@@ -1,29 +1,37 @@
 import path from "path";
-import fs from "fs";
+import fs  from "fs";
 
 
-interface ProfileTest { 
-    name: string;
-    description: string;
-    testPath: string
-}
 
-export abstract class ProfileManager {
-      abstract readTestProfile(driver: WebdriverIO.Browser): Promise<ProfileTest[]>;
+abstract class ProfileManager {
+      abstract init(path: String) : void;
+      abstract readTestProfile(): Promise<ProfileTest[]>;
 }
 
 
-export default class ProfileManagerImpl extends ProfileManager {
-  testProfilePath;
+  export class ProfileManagerImpl extends ProfileManager {
+    private static instance: ProfileManager;
 
-  constructor(profilePath: string) {
+  private testProfilePath! : string;
+
+ private constructor() {
     super();
-    this.testProfilePath = profilePath;
   }
 
-    async readTestProfile(): Promise<ProfileTest[]> {
+  public static getInstance(): ProfileManager {
+    if (!ProfileManagerImpl.instance) {
+      ProfileManagerImpl.instance = new ProfileManagerImpl();
+    }
+    return ProfileManagerImpl.instance;
+  }
+
+  public init(path: string){
+    console.log("Profile Manager init")
+    this.testProfilePath = path;
+  }
+
+  async readTestProfile(): Promise<ProfileTest[]> {
         let testCases : ProfileTest[] = JSON.parse(fs.readFileSync(this.testProfilePath, "utf8"));
         return testCases;
-    }
-  
+  }
 }

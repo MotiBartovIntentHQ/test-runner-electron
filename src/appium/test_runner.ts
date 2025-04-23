@@ -6,10 +6,7 @@ import fs, { PathLike } from "fs";
 import { extendBrowser } from "./core/browser_extensions.js";
 
 import {startLogcat, stopLogcat} from '../appium/services/logcat.js';
-import ProfileManagerImpl from "./core/profile-manager/profile-manager.js";
-
- const __dirname = path.resolve();
- const profileManager = new ProfileManagerImpl(process.argv[2]);
+import {ProfileManagerImpl as profileManager} from "./core/profile-manager/profile-manager.js";
 
 // 🔹 Set up CSV Writer
 
@@ -57,7 +54,9 @@ const capabilities = {
       driver = await setupDriver()
       await initializeLog(driver);
      
-      let testCases = await profileManager.readTestProfile()
+      let pManager = profileManager.getInstance()
+      pManager.init(process.argv[2]);
+      let testCases = (await pManager.readTestProfile()).filter(item => item.enabled);
       for (const testInfo of testCases) {
         console.log(`-------------------------------------------🔹 Running: ${testInfo.name} ---------------------------------------`);
         try {
@@ -75,6 +74,7 @@ const capabilities = {
 
         } catch (error: any) {
           console.error(`------------------------------------ ❌ Error loading or executing ${testInfo.name}: ------------------------------------` );
+          console.error(`------------------------------------ ❌ ${error.message}: ------------------------------------\n ${__dirname}` );
           results.push({
             test: testInfo.name,
             description: testInfo.description,

@@ -1,10 +1,15 @@
-
+const fs = require("fs");
 const { contextBridge, ipcRenderer } = require( "electron");
+
 contextBridge.exposeInMainWorld("electronApi", {
     runTests: (profilePath: string, apkPath: string) =>
       ipcRenderer.invoke("run-tests", profilePath, apkPath),
   
     openFileDialog: () => ipcRenderer.invoke("open-file-dialog"),
+    readFile: (path: string) => {
+      const content = fs.readFileSync(path, "utf8")
+      return content;
+    },
 
     getFilePaths: (): Promise<string[]> => {
       return new Promise((resolve) => {
@@ -24,3 +29,5 @@ contextBridge.exposeInMainWorld("electronApi", {
       });
     }
   });
+
+
