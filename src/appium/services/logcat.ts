@@ -24,7 +24,6 @@ export const startLogcat = (packageName : String) => {
     logcatProcess = spawn("adb", ["logcat", `--pid`, pid], { stdio: ["ignore", "pipe", "pipe"] });
     logcatProcess.stdout.on("data", (data) => {
         const log = data.toString();
-        console.log(log);
         logStream.write(log);
       });
       

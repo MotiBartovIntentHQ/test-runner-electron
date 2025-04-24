@@ -31,7 +31,8 @@ ipcMain.handle("run-tests", async (_event, profilePath, apkPath) => {
     let output = "";
 
     runner.stdout.on("data", (data) => {
-      output += data.toString();
+     // output += data.toString();
+      _event.sender.send("process-update", data.toString());
     });
 
     runner.stderr.on("data", (data) => {

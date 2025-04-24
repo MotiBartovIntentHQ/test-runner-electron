@@ -25,7 +25,7 @@ const csv = createObjectCsvWriter({
 // 🔹 Appium Server URL
 const APPIUM_SERVER = "http://127.0.0.1:4723/wd/hub";
 
-console.log("All args:", process.argv);
+// console.log("All args:", process.argv);
 
 const currentDir = process.cwd();
 

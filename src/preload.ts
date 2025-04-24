@@ -5,7 +5,13 @@ contextBridge.exposeInMainWorld("electronApi", {
     runTests: (profilePath: string, apkPath: string) =>
       ipcRenderer.invoke("run-tests", profilePath, apkPath),
   
+
     openFileDialog: () => ipcRenderer.invoke("open-file-dialog"),
+
+    onProcessUpdate: (callback: (msg: string) => void) => {
+      ipcRenderer.on("process-update", (_event: any, msg: string) => callback(msg));
+    },
+    
     readFile: (path: string) => {
       const content = fs.readFileSync(path, "utf8")
       return content;

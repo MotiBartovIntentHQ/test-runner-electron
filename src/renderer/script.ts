@@ -90,6 +90,12 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 
   }
+
+  (window as any).electronApi.onProcessUpdate((msg: string) => {
+    consoleOutput.textContent += msg + "\n";
+    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+  });
+  
 });
 
 async function loadPartial(id: string, file: string) {
