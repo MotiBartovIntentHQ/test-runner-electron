@@ -34,5 +34,11 @@
       "description": "Verify Campaign Download",
       "testPath": "./tests/campaign_download_test.js",
       "enabled": true
+    },
+    {
+      "name": "Camapign Trigger",
+      "description": "Test campaign trigger",
+      "testPath": "./tests/campaign_trigger_test.js",
+      "enabled": true
     }
   ]

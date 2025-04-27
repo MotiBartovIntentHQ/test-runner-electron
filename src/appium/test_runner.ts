@@ -41,7 +41,7 @@ const capabilities = {
   'appium:automationName': 'UiAutomator2',
   'appium:autoGrantPermissions': true, // Automatically grants permissions
   'appium:noReset': false, // Ensures app is reinstalled every test run
-  'appium:fullReset': true
+  'appium:fullReset': false
 };
 
   (async () => {
