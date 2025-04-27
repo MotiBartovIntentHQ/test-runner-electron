@@ -14,10 +14,11 @@ export default class CampaignTriggerTest extends BaseTest {
 
 
     try {
+      await driver.pause(5000);
       await driver.background(-1);
       await driver.pause(5000);
       await driver.activateApp('com.anagog.jedai.jedaidemo');
-      await driver.pause(5000);
+      await driver.pause(10000);
 
       const currentDir = process.cwd();
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");

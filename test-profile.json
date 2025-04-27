@@ -40,5 +40,11 @@
       "description": "Test campaign trigger",
       "testPath": "./tests/campaign_trigger_test.js",
       "enabled": true
+    },
+    {
+      "name": "Jema Notification Click",
+      "description": "Click on campaign notification and check result",
+      "testPath": "./tests/jema_notification_clilck_test.js",
+      "enabled": true
     }
   ]
