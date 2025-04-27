@@ -1,2 +1,3 @@
 /dist/*
 /node_modules
+/logcat_dump.txt

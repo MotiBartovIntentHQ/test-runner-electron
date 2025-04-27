@@ -28,5 +28,11 @@
       "description": "Verify Manifest download",
       "testPath": "./tests/manifest_download_test.js",
       "enabled": true
+    },
+    {
+      "name": "Campaign Artifacts Download",
+      "description": "Verify Campaign Download",
+      "testPath": "./tests/campaign_download_test.js",
+      "enabled": true
     }
   ]
