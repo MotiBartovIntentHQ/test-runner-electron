@@ -48,5 +48,17 @@
         li:hover {
           background-color: #ddd;
         }
+
+        .list-item {
+          display: flex; /* Allow content and icon on same line */
+          justify-content: space-between; /* Push text and icon apart */
+          align-items: center; /* Center vertically */
+          padding: 5px 15px;
+          cursor: pointer; /* Pointer cursor on hover */
+          border-bottom: 1px solid #ddd; /* Optional: item divider */
+        }
+        .list-item.selected {
+          background-color: #e0f7fa; /* Light blue background to simulate selection */
+        }
       </style>
 </head>

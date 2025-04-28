@@ -57,8 +57,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   runBtn.onclick = async () => {
     consoleOutput.textContent = "🚀 Running tests...\n";
-    const result = await (window as any).electronApi.runTests(profilePath, apkPath);
-    consoleOutput.textContent += result;
+    //const result = await (window as any).electronApi.runTests(profilePath, apkPath);
+    //consoleOutput.textContent += result;
+
+    iterateList();
   };
 
 
@@ -71,24 +73,74 @@ window.addEventListener("DOMContentLoaded", async () => {
    const itemList = document.getElementById("testsList")!;
    if(testCases.length > 0){
     itemList.innerHTML = "";
-    testCases.filter(item => item.enabled == true).forEach((item: ProfileTest) => {
+    testCases.filter(item => item.enabled == true).forEach((item: ProfileTest, index: number) => {
       const li = document.createElement("li");
-      li.textContent = item.name;
-      // li.style.border = "2px inset #ccc";
-      // li.style.marginBottom = "0.5rem";
-      // li.style.padding = "0.5rem";
-      // li.style.cursor = "pointer";
-  
+      li.id = `test-${index}`;
+      li.classList.add("list-item")
+    
+      const textNode = document.createTextNode(item.name)
+    
+      const icon = document.createElement("span");
+      icon.classList.add("icon");
+      icon.textContent = ""; // You can also use an SVG or emoji
+
+// Append the text and the icon into the <li>
+      li.appendChild(textNode);
+      li.appendChild(icon);  
       li.addEventListener("click", () => {
         console.log(`🧪 Selected test: ${item.name}`);
+        
         // You can fire off logic here like loading test info or running it
       });
+
+      
   
       itemList.appendChild(li);
     });    
    }
+  }
 
+  async function iterateList() {
+    const itemList = document.getElementById("testsList")!;
+    const items = itemList.querySelectorAll<HTMLLIElement>("li");
 
+    for(let index = 0; index < items.length; index++) {
+      updateTestStatus(index, "running")
+      await delay(1000);
+      if(index % 3 === 0){
+        updateTestStatus(index, "passed")
+      } else {
+        updateTestStatus(index, "failed")
+      }
+    }
+  }
+
+  function updateTestStatus(index: number, status: string){
+    const li = document.getElementById(`test-${index}`);
+
+    if(!li){
+      return;
+    }
+    const icon = li.querySelector<HTMLSpanElement>(".icon");
+
+    if(status === "running"){ 
+      li.classList.add("selected");
+    } else {
+      li.classList.remove("selected");
+    }
+    
+    consoleOutput.textContent += `Updating item: ${li}\n`
+    if(!icon){
+      return;
+    } 
+
+    if(status !== "running"){
+      if(status === "passed"){
+        icon.textContent = "✅";
+      } else {
+        icon.textContent = "❌";
+      }
+    } 
   }
 
   (window as any).electronApi.onProcessUpdate((msg: string) => {
@@ -103,6 +155,10 @@ async function loadPartial(id: string, file: string) {
   const html = await response.text();
   const container = document.getElementById(id);
   if (container) container.innerHTML = html;
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
