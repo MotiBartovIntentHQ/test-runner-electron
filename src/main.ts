@@ -29,10 +29,39 @@ ipcMain.handle("run-tests", async (_event, profilePath, apkPath) => {
   return new Promise((resolve) => {
     const runner = spawn("node", ["dist/appium/test_runner.js", profilePath, apkPath]);
     let output = "";
+    let buffer = "";
 
-    runner.stdout.on("data", (data) => {
+    runner.stdout.on("data", (chunk) => {
+      console.log("stdout: chunk: " + chunk)
+
+      buffer += chunk.toString();
+
+      let lines = chunk.toString().split("\\n");
+      const message = buffer = lines.pop() || "";
+      console.log("stdout: poped line: " + message)
+
+      for (const line of lines) {
+        try {
+          const message = JSON.parse(line);
+          //console.log("stdout: message: " + message)
+          _event.sender.send("process-update", message);
+        } catch {
+          //console.warn("stdout: failed to parse line to object: " + line)
+          _event.sender.send("process-update", line)
+          //console.warn("❗Invalid JSON from child:", line);
+        }
+      }
+
+      // console.log("stdHandler: " + data)
+      // try{
+      //   const message = JSON.parse(data);
+      //   output += data;
+      //   _event.sender.send("process-update", message);
+      // } catch {
+      //   _event.sender.send("process-update", data);
+      // }
      // output += data.toString();
-      _event.sender.send("process-update", data.toString());
+     
     });
 
     runner.stderr.on("data", (data) => {

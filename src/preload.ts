@@ -8,8 +8,8 @@ contextBridge.exposeInMainWorld("electronApi", {
 
     openFileDialog: () => ipcRenderer.invoke("open-file-dialog"),
 
-    onProcessUpdate: (callback: (msg: string) => void) => {
-      ipcRenderer.on("process-update", (_event: any, msg: string) => callback(msg));
+    onProcessUpdate: (callback: (msg: any) => void) => {
+      ipcRenderer.on("process-update", (_event: any, msg: any) => callback(msg));
     },
     
     readFile: (path: string) => {

@@ -7,8 +7,11 @@ import { extendBrowser } from "./core/browser_extensions.js";
 
 import {startLogcat, stopLogcat} from '../appium/services/logcat.js';
 import {ProfileManagerImpl as profileManager} from "./core/profile-manager/profile-manager.js";
-
+import { EventEmitterImpl } from "./services/event_emitter.js";
+import { EventEmitter } from "stream";
 // 🔹 Set up CSV Writer
+
+const eventEmitter = EventEmitterImpl.getInstance();
 
 const resultsPath = path.join(__dirname, "test_results.csv");
 const csv = createObjectCsvWriter({
@@ -41,7 +44,7 @@ const capabilities = {
   'appium:automationName': 'UiAutomator2',
   'appium:autoGrantPermissions': true, // Automatically grants permissions
   'appium:noReset': false, // Ensures app is reinstalled every test run
-  'appium:fullReset': false
+  'appium:fullReset': true
 };
 
   (async () => {
@@ -50,15 +53,19 @@ const capabilities = {
 
     try {
       // 🔹 Connect to Appium
-      console.log("🚀 -------------------------------------------- Starting Appium tests -----------------------------------------");
+      eventEmitter.start();
+      eventEmitter.log("🚀 -------------------------------------------- Starting Appium tests -----------------------------------------")
       driver = await setupDriver()
       await initializeLog(driver);
      
       let pManager = profileManager.getInstance()
       pManager.init(process.argv[2]);
       let testCases = (await pManager.readTestProfile()).filter(item => item.enabled);
-      for (const testInfo of testCases) {
-        console.log(`-------------------------------------------🔹 Running: ${testInfo.name} ---------------------------------------`);
+        for(let index = 0; index < testCases.length; index++) {
+
+        const testInfo = testCases[index];
+        eventEmitter.log(`-------------------------------------------🔹 Running: ${testInfo.name} ---------------------------------------`)
+        eventEmitter.testStart(index)
         try {
           // 🔹 Dynamically import the test class
           const TestModule = await import(testInfo.testPath);
@@ -70,11 +77,13 @@ const capabilities = {
           // 🔹 Execute the test
           const result = await testInstance.execute(driver);
           results.push(result);
-          console.log(`----------------------- Test: ${TestClass.name} result: ${JSON.stringify(result.status)} -----------------------`)
+          eventEmitter.log(`----------------------- Test: ${TestClass.name} result: ${result.status} -----------------------`);
 
+          eventEmitter.testStop(  index, result.status);
         } catch (error: any) {
-          console.error(`------------------------------------ ❌ Error loading or executing ${testInfo.name}: ------------------------------------` );
-          console.error(`------------------------------------ ❌ ${error.message}: ------------------------------------\n ${__dirname}` );
+          eventEmitter.error(`------------------------------------ ❌ Error loading or executing ${testInfo.name}: ------------------------------------`);
+          eventEmitter.error(`------------------------------------ ❌ ${error.message}: ------------------------------------ ${__dirname}`);
+          eventEmitter.testStop( index, TestStatus.FAIL);
           results.push({
             test: testInfo.name,
             description: testInfo.description,
@@ -83,24 +92,23 @@ const capabilities = {
           });
         }
       }
-      console.log("🚀 -------------------------------------------- Appium tests finished -----------------------------------------");
-    
+      eventEmitter.log( `🚀 -------------------------------------------- Appium tests finished -----------------------------------------`);    
     } catch (error) {
-      console.error("❌ Test failed:", error);
+      eventEmitter.error( `❌ Test failed: ${JSON.stringify(error)}`);
+      
     } finally {
       if (driver) {
         await driver.deleteSession();
-        console.log("🎯 Test completed!");
+        eventEmitter.log( `🎯 Test completed!`);    
       }
     }
 
     const hasFailed  = results.some(result => result.status === TestStatus.FAIL);
 
-    console.log(`🚀 -------------------------------------------- Appium tests finished with status - ${hasFailed ? "FAILED!! 🟥" : "PASSED ✅"} -----------------------------------------`);
-
+    eventEmitter.log(`🚀 -------------------------------------------- Appium tests finished with status - ${hasFailed ? "FAILED!! 🟥" : "PASSED ✅"} -----------------------------------------`);    
     stopLogcat();
     await csv.writeRecords(results);
-    console.log(`📊 Test report saved: ${resultsPath}`);
+    eventEmitter.log(`📊 Test report saved: ${resultsPath}`);    
   })();
 
   async function setupDriver() : Promise<WebdriverIO.Browser> {

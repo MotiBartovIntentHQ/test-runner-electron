@@ -56,11 +56,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   runBtn.onclick = async () => {
+    consoleOutput.textContent = "";
     consoleOutput.textContent = "🚀 Running tests...\n";
-    //const result = await (window as any).electronApi.runTests(profilePath, apkPath);
-    //consoleOutput.textContent += result;
+    const result = await (window as any).electronApi.runTests(profilePath, apkPath);
+    consoleOutput.textContent += result;
 
-    iterateList();
+    // iterateList();
   };
 
 
@@ -115,6 +116,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+
   function updateTestStatus(index: number, status: string){
     const li = document.getElementById(`test-${index}`);
 
@@ -128,14 +130,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     } else {
       li.classList.remove("selected");
     }
-    
-    consoleOutput.textContent += `Updating item: ${li}\n`
+
     if(!icon){
       return;
     } 
 
     if(status !== "running"){
-      if(status === "passed"){
+      if(status === "PASS"){
         icon.textContent = "✅";
       } else {
         icon.textContent = "❌";
@@ -143,8 +144,42 @@ window.addEventListener("DOMContentLoaded", async () => {
     } 
   }
 
-  (window as any).electronApi.onProcessUpdate((msg: string) => {
-    consoleOutput.textContent += msg + "\n";
+  function clearTestsList(){
+    const itemList = document.getElementById("testsList")!;
+    const items = itemList.querySelectorAll<HTMLLIElement>("li");
+    for(let index = 0; index < items.length; index++) {
+      const li = document.getElementById(`test-${index}`);
+      const icon = li?.querySelector<HTMLSpanElement>(".icon");
+      li?.classList.remove("selected");
+      icon!.textContent = "";
+    }
+  }
+
+  function clearConsole(){
+    consoleOutput.textContent = "";
+  }
+
+  function startTesting(){
+    clearTestsList();
+    clearConsole()
+  }
+
+  (window as any).electronApi.onProcessUpdate((msg: any) => {
+    if(typeof msg === "object"){
+      switch(msg.type){
+        case "start": startTesting();
+        break;
+        case "test-start": updateTestStatus(msg.index, "running");
+        break;
+        case "test-stop" : updateTestStatus(msg.index, msg.status.toString());
+        break;
+        case "log" : consoleOutput.textContent += msg.content;
+        break;
+        case "error": consoleOutput.textContent += msg.content;
+      }
+    } else {
+      consoleOutput.textContent += msg + "\n";
+    }
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
   });
   
