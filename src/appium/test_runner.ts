@@ -70,7 +70,7 @@ const capabilities = {
           // 🔹 Dynamically import the test class
           const TestModule = await import(testInfo.testPath);
           const TestClass = TestModule.default || TestModule[testInfo.name];
-          console.log(`🔹 Running test class: ${TestClass.name}`);
+          console.log(`🔹 Running test class ${TestClass.name}`);
 
           const testInstance: BaseTest = new TestClass();
   
