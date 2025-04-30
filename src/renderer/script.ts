@@ -20,6 +20,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const runBtn = document.getElementById("runBtn") as HTMLButtonElement;
   const consoleOutput = document.getElementById("consoleOutput")!;
+  const statusIndicator = document.getElementById("test-stauts-container") as HTMLInputElement;
+  const statusIndicatorText = document.getElementById("test-status-continer-text") as HTMLInputElement;
 
   let profilePath = "";
   let apkPath = "";
@@ -101,22 +103,6 @@ window.addEventListener("DOMContentLoaded", async () => {
    }
   }
 
-  async function iterateList() {
-    const itemList = document.getElementById("testsList")!;
-    const items = itemList.querySelectorAll<HTMLLIElement>("li");
-
-    for(let index = 0; index < items.length; index++) {
-      updateTestStatus(index, "running")
-      await delay(1000);
-      if(index % 3 === 0){
-        updateTestStatus(index, "passed")
-      } else {
-        updateTestStatus(index, "failed")
-      }
-    }
-  }
-
-
   function updateTestStatus(index: number, status: string){
     const li = document.getElementById(`test-${index}`);
 
@@ -144,6 +130,16 @@ window.addEventListener("DOMContentLoaded", async () => {
     } 
   }
 
+  function updateTestResult(status: string){
+   if(status === "PASSED") {
+    statusIndicator.style.backgroundColor = "#0add3b";
+    statusIndicatorText.textContent = "PASSED 🙂"
+   } else if(status === "FAILED"){
+    statusIndicator.style.backgroundColor = "#e20d0d";
+    statusIndicatorText.textContent = "FAILED 🙁"
+   }
+  }
+
   function clearTestsList(){
     const itemList = document.getElementById("testsList")!;
     const items = itemList.querySelectorAll<HTMLLIElement>("li");
@@ -162,6 +158,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   function startTesting(){
     clearTestsList();
     clearConsole()
+    statusIndicator.style.backgroundColor = "#e4cb12";
+    statusIndicatorText.textContent = "Running ⏳"
   }
 
   (window as any).electronApi.onProcessUpdate((msg: any) => {
@@ -172,6 +170,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         case "test-start": updateTestStatus(msg.index, "running");
         break;
         case "test-stop" : updateTestStatus(msg.index, msg.status.toString());
+        break;
+        case "test-result" : updateTestResult(msg.status);
         break;
         case "log" : consoleOutput.textContent += msg.content + "\n";
         break;

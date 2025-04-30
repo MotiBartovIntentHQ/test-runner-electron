@@ -3,6 +3,7 @@ import { stat } from "fs"
 export interface EventEmitter {
      log(message: string) : void
      error(message: string) : void
+     testResult(status: string): void
      start() : void
      testStart(index: number) : void
      testStop(index: number, status: string) : void 
@@ -39,6 +40,10 @@ export class EventEmitterImpl implements EventEmitter {
         this.emit({type: "test-stop", index: index, status: status})
     }
 
+
+    testResult(status: string): void {
+        this.emit({type: 'test-result', status: status})    ;
+    }
 
     emit(message: object) {
         process.stdout.write(JSON.stringify(message) + "\\n");

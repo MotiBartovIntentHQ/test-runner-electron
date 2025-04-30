@@ -78,8 +78,8 @@ const capabilities = {
           const result = await testInstance.execute(driver);
           results.push(result);
           eventEmitter.log(`----------------------- ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥`} -----------------------`);
-
           eventEmitter.testStop(  index, result.status);
+
         } catch (error: any) {
           eventEmitter.error(`------------------------------------ ❌ Error loading or executing ${testInfo.name}: ------------------------------------`);
           eventEmitter.error(`------------------------------------ ❌ ${error.message}: ------------------------------------ ${__dirname}`);
@@ -106,6 +106,7 @@ const capabilities = {
     const hasFailed  = results.some(result => result.status === TestStatus.FAIL);
 
     eventEmitter.log(`🚀 -------------------------------------------- Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`} -----------------------------------------`);    
+    eventEmitter.testResult(hasFailed ? `FAILED` : `PASSED`);
     stopLogcat();
     await csv.writeRecords(results);
     eventEmitter.log(`📊 Test report saved: ${resultsPath}`);    
