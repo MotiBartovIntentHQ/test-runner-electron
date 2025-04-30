@@ -1,5 +1,5 @@
 import { remote, Browser } from "webdriverio";
-
+import { EventEmitter, EventEmitterImpl } from "../services/event_emitter";
 export interface TestResult {
   test: string;
   description: string;
@@ -12,6 +12,7 @@ export enum TestStatus {
 }
 
 export abstract class BaseTest {
+    eventEmitter : EventEmitter = EventEmitterImpl.getInstance();
     name: string;
     description: string;
   

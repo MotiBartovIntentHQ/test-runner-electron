@@ -173,9 +173,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         break;
         case "test-stop" : updateTestStatus(msg.index, msg.status.toString());
         break;
-        case "log" : consoleOutput.textContent += msg.content;
+        case "log" : consoleOutput.textContent += msg.content + "\n";
         break;
-        case "error": consoleOutput.textContent += msg.content;
+        case "error": consoleOutput.textContent += msg.content + "\n";
       }
     } else {
       consoleOutput.textContent += msg + "\n";

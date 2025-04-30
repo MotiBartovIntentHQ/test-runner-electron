@@ -8,7 +8,6 @@ import { extendBrowser } from "./core/browser_extensions.js";
 import {startLogcat, stopLogcat} from '../appium/services/logcat.js';
 import {ProfileManagerImpl as profileManager} from "./core/profile-manager/profile-manager.js";
 import { EventEmitterImpl } from "./services/event_emitter.js";
-import { EventEmitter } from "stream";
 // 🔹 Set up CSV Writer
 
 const eventEmitter = EventEmitterImpl.getInstance();
@@ -54,7 +53,8 @@ const capabilities = {
     try {
       // 🔹 Connect to Appium
       eventEmitter.start();
-      eventEmitter.log("🚀 -------------------------------------------- Starting Appium tests -----------------------------------------")
+      eventEmitter.log("🚀 -------------------------------------------- Starting Appium tests - initializing -----------------------------------------")
+
       driver = await setupDriver()
       await initializeLog(driver);
      
@@ -64,7 +64,7 @@ const capabilities = {
         for(let index = 0; index < testCases.length; index++) {
 
         const testInfo = testCases[index];
-        eventEmitter.log(`-------------------------------------------🔹 Running: ${testInfo.name} ---------------------------------------`)
+        eventEmitter.log(`-------------------------------------------🔹 Running ${testInfo.name} test ---------------------------------------`)
         eventEmitter.testStart(index)
         try {
           // 🔹 Dynamically import the test class
@@ -77,7 +77,7 @@ const capabilities = {
           // 🔹 Execute the test
           const result = await testInstance.execute(driver);
           results.push(result);
-          eventEmitter.log(`----------------------- Test: ${TestClass.name} result: ${result.status} -----------------------`);
+          eventEmitter.log(`----------------------- Test ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥` } -----------------------`);
 
           eventEmitter.testStop(  index, result.status);
         } catch (error: any) {
@@ -94,7 +94,7 @@ const capabilities = {
       }
       eventEmitter.log( `🚀 -------------------------------------------- Appium tests finished -----------------------------------------`);    
     } catch (error) {
-      eventEmitter.error( `❌ Test failed: ${JSON.stringify(error)}`);
+      eventEmitter.error( `❌ Test failed ${JSON.stringify(error)}`);
       
     } finally {
       if (driver) {
@@ -105,7 +105,7 @@ const capabilities = {
 
     const hasFailed  = results.some(result => result.status === TestStatus.FAIL);
 
-    eventEmitter.log(`🚀 -------------------------------------------- Appium tests finished with status - ${hasFailed ? "FAILED!! 🟥" : "PASSED ✅"} -----------------------------------------`);    
+    eventEmitter.log(`🚀 -------------------------------------------- Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`} -----------------------------------------`);    
     stopLogcat();
     await csv.writeRecords(results);
     eventEmitter.log(`📊 Test report saved: ${resultsPath}`);    

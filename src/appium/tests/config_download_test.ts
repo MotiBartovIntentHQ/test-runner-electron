@@ -8,8 +8,7 @@ export default class ConfigDownloadTest extends BaseTest {
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-
-
+    this.eventEmitter.log(`Execute Config Download Test`);
 
     try {
       const currentDir = process.cwd();
@@ -19,6 +18,9 @@ export default class ConfigDownloadTest extends BaseTest {
       
       if(!logs.includes("Successfully downloaded config from server")){
         testStatus = TestStatus.FAIL;
+        this.eventEmitter.log(`Failed to download config from server`);
+      } else {
+        this.eventEmitter.log(`Successfully downloaded config from server`);
       }
 
       return {

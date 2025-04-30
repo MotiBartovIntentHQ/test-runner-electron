@@ -1,4 +1,5 @@
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { EventEmitterImpl } from "../services/event_emitter.js";
 
 export default class InstallAndRun extends BaseTest {
   constructor() {
@@ -7,10 +8,12 @@ export default class InstallAndRun extends BaseTest {
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     try {
+        await driver.pause(1000);
+
         const capabilities = JSON.parse(JSON.stringify(driver.capabilities));
-        console.log("appPackage: " + capabilities["appPackage"]);
+        this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
         const element = await driver.$("//android.widget.TextView[contains(@text, 'JedAI')]");
-        console.log(`element: ${JSON.stringify(element)}`);
+        this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
         const viewExists = element != null
       return {
         test: this.name,

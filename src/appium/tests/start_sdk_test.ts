@@ -4,19 +4,16 @@ import * as fs from "fs";
 
 export default class StartSdkTest extends BaseTest {
   constructor() {
-    super("SdkInitialState", "Verify SDK disabled at startup");
+    super("StartSdkTest", "Verify SDK disabled at startup");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    console.log("execute Test1");
-
-
+    this.eventEmitter.log("StartSdkTest Test");
 
     try {
       const currentDir = process.cwd();
 
-      console.log(`StartSdkTest: currentDir ${currentDir}`)
       
       await this.startSdkFromMenu(driver);
       await driver.pause(1000);
@@ -25,6 +22,8 @@ export default class StartSdkTest extends BaseTest {
       let status = TestStatus.PASS;
       if(!logs.includes("SDK State Changed from SUSPENDED to RUNNING")){
         status = TestStatus.FAIL
+      } else {
+        this.eventEmitter.log(`SDK Up And Running`)
       }
 
       return {

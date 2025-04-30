@@ -4,21 +4,19 @@ import * as fs from "fs";
 
 export default class CampaignTriggerTest extends BaseTest {
   constructor() {
-    super("ConfigDownloadTest", "Verifying remote config download successfully");
+    super("CampaignTriggerTest", "Verifying campaign trigger");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    console.log("execute Test1");
-
-
+    this.eventEmitter.log(`Execute Campaign Trigger Test`)
 
     try {
       await driver.pause(5000);
       await driver.background(-1);
       await driver.pause(5000);
       await driver.activateApp('com.anagog.jedai.jedaidemo');
-      await driver.pause(10000);
+      await driver.pause(15000);
 
       const currentDir = process.cwd();
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
@@ -26,10 +24,10 @@ export default class CampaignTriggerTest extends BaseTest {
       let testStatus = TestStatus.FAIL;
 
       if(logs.includes("internalLambdaEvent: campaign_notification") && logs.includes("onCampaignTriggered, forward to event listeners")){
-        console.log("Campaign triggered successfully")
+        this.eventEmitter.log("Campaign triggered successfully")
         testStatus = TestStatus.PASS;
       }  else {
-        console.log("Failed to identify a campaign trigger")
+        this.eventEmitter.log("Failed to identify a campaign trigger")
       }
 
       return {

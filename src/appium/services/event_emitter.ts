@@ -1,6 +1,6 @@
 import { stat } from "fs"
 
-interface EventEmitter {
+export interface EventEmitter {
      log(message: string) : void
      error(message: string) : void
      start() : void

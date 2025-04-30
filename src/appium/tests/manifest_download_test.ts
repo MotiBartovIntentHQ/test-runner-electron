@@ -2,19 +2,18 @@ import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
 import * as fs from "fs";
 
-export default class ConfigDownloadTest extends BaseTest {
+export default class ManifestDownloadTest extends BaseTest {
   constructor() {
-    super("ConfigDownloadTest", "Verifying remote config download successfully");
+    super("ManifestDownloadTest", "Verifying remote config download successfully");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    console.log("execute Test1");
-
-
+    this.eventEmitter.log(`Execute Manifest Download Test`);
 
     try {
       const currentDir = process.cwd();
+      this.eventEmitter.log(`Waiting for manifest download `);
       await driver.pause(5000);
 
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");

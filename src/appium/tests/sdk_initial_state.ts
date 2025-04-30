@@ -8,14 +8,12 @@ export default class SdkInitialState extends BaseTest {
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    console.log("execute Test1");
-
-
+    this.eventEmitter.log("Execute SdkInitialState test");
 
     try {
       const currentDir = process.cwd();
 
-      console.log(`SdkInitialState: currentDir ${currentDir}`)
+      this.eventEmitter.log(`SdkInitialState - currentDir ${currentDir}`)
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
       let testStatus = TestStatus.PASS;
       
