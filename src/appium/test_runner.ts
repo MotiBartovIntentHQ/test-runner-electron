@@ -77,7 +77,7 @@ const capabilities = {
           // 🔹 Execute the test
           const result = await testInstance.execute(driver);
           results.push(result);
-          eventEmitter.log(`----------------------- Test ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥` } -----------------------`);
+          eventEmitter.log(`----------------------- ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥`} -----------------------`);
 
           eventEmitter.testStop(  index, result.status);
         } catch (error: any) {
