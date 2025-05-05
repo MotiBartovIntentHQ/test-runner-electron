@@ -22,6 +22,12 @@ export default class StartSdkTest extends BaseTest {
       let status = TestStatus.PASS;
       if(!logs.includes("SDK State Changed from SUSPENDED to RUNNING")){
         status = TestStatus.FAIL
+        return {
+          test: this.name,
+          description: this.description,
+          status: status,
+          error: "Failed to start SDK",
+        };
       } else {
         this.eventEmitter.log(`SDK Up And Running`)
       }
@@ -29,7 +35,7 @@ export default class StartSdkTest extends BaseTest {
       return {
         test: this.name,
         description: this.description,
-        status: TestStatus.PASS,
+        status: status,
         error: "",
       };
     } catch (error: any) {
