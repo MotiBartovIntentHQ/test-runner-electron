@@ -46,5 +46,18 @@
       "description": "Click on campaign notification and check result",
       "testPath": "./tests/jema_notification_clilck_test.js",
       "enabled": true
+    },
+    {
+      "name": "Generate Reports",
+      "description": "Verify Generate and Send Reports",
+      "testPath": "./tests/generate_reports_test.js",
+      "enabled": true
+    },
+    {
+      "name": "Microsegments Reports",
+      "description": "Verify Microsegments generate and Send Reports",
+      "testPath": "./tests/microsegments_reports_test.js",
+      "enabled": true
     }
+
   ]
