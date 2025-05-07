@@ -39,8 +39,8 @@ export default class SnapshotReportTest extends BaseTest {
           error: "Unable to find Microsegment snapshot generate report",
         };
       }
-
-      const regex = /Report was generated: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
+      
+      const regex = /Snapshot report file ready: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
 
       const matchResult = regex.test(logs);
       this.eventEmitter.log(`Microsegment snapshot report match ${matchResult}`)

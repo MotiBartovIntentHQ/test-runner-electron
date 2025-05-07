@@ -30,7 +30,7 @@ export default class MicrosegmentsReportsTest extends BaseTest {
         };
       }
 
-      if(!logs.includes("About to get stats for report") || !logs.includes("Report stats gathering finished")){
+      if(!logs.includes("About to get stats for") || !logs.includes("Report stats gathering finished")){
         status = TestStatus.FAIL
         return {
           test: this.name,

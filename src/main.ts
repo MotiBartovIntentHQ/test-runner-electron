@@ -32,13 +32,13 @@ ipcMain.handle("run-tests", async (_event, profilePath, apkPath) => {
     let buffer = "";
 
     runner.stdout.on("data", (chunk) => {
-      console.log("stdout: chunk: " + chunk)
+     // console.log("stdout: chunk: " + chunk)
 
       buffer += chunk.toString();
 
       let lines = chunk.toString().split("\\n");
       const message = buffer = lines.pop() || "";
-      console.log("stdout: poped line: " + message)
+ //     console.log("stdout: poped line: " + message)
 
       for (const line of lines) {
         try {
