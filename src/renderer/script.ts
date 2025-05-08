@@ -70,13 +70,14 @@ window.addEventListener("DOMContentLoaded", async () => {
   async function  readTestFromJson(path: string)  {
     console.log(`readTestFromJson path: ${path}`)
     const content = await (window as any).electronApi.readFile(path);
-    let testCases : ProfileTest[] = JSON.parse(content)
+    let testProfile : TestProfile = JSON.parse(content)
     // let tests = await profileManager.readTestProfile()
-   console.log(`Loaded tests: ${JSON.stringify(testCases)}`);
+   console.log(`Loaded tests: ${JSON.stringify(testProfile)}`);
    const itemList = document.getElementById("testsList")!;
-   if(testCases.length > 0){
+   const testCases = testProfile.tests;
+   if(testProfile.tests.length > 0){
     itemList.innerHTML = "";
-    testCases.filter(item => item.enabled == true).forEach((item: ProfileTest, index: number) => {
+    testCases.filter(item => item.enabled == true).forEach((item: Test, index: number) => {
       const li = document.createElement("li");
       li.id = `test-${index}`;
       li.classList.add("list-item")

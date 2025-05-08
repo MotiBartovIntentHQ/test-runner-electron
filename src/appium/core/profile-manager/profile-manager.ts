@@ -5,9 +5,8 @@ import fs  from "fs";
 
 abstract class ProfileManager {
       abstract init(path: String) : void;
-      abstract readTestProfile(): Promise<ProfileTest[]>;
+      abstract readTestProfile(): Promise<TestProfile>
 }
-
 
   export class ProfileManagerImpl extends ProfileManager {
     private static instance: ProfileManager;
@@ -30,8 +29,8 @@ abstract class ProfileManager {
     this.testProfilePath = path;
   }
 
-  async readTestProfile(): Promise<ProfileTest[]> {
-        let testCases : ProfileTest[] = JSON.parse(fs.readFileSync(this.testProfilePath, "utf8"));
+  async readTestProfile(): Promise<TestProfile> {
+        let testCases : TestProfile = JSON.parse(fs.readFileSync(this.testProfilePath, "utf8"));
         return testCases;
   }
 }

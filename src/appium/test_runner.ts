@@ -8,6 +8,7 @@ import { extendBrowser } from "./core/browser_extensions.js";
 import {startLogcat, stopLogcat} from '../appium/services/logcat.js';
 import {ProfileManagerImpl as profileManager} from "./core/profile-manager/profile-manager.js";
 import { EventEmitterImpl } from "./services/event_emitter.js";
+import { emit } from "process";
 // 🔹 Set up CSV Writer
 
 const eventEmitter = EventEmitterImpl.getInstance();
@@ -34,17 +35,7 @@ const currentDir = process.cwd();
 const apkPath = process.argv[3];
 
 // 🔹 Desired Capabilities
-const capabilities = {
-  platformName: 'Android',
-  'appium:deviceName': 'emulator-5554', // Change to your device name from `adb devices`
-  'appium:app': apkPath, // Update with the APK path
-  'appium:appPackage': 'com.anagog.jedai.jedaidemo', // Replace with actual package name
-  'appium:appActivity': '.MainActivity', // Replace with actual main activity
-  'appium:automationName': 'UiAutomator2',
-  'appium:autoGrantPermissions': true, // Automatically grants permissions
-  'appium:noReset': false, // Ensures app is reinstalled every test run
-  'appium:fullReset': true
-};
+
 
   (async () => {
     let driver : WebdriverIO.Browser | null = null;
@@ -53,18 +44,32 @@ const capabilities = {
     try {
       // 🔹 Connect to Appium
       eventEmitter.start();
-      eventEmitter.log("🚀 -------------------------------------------- Starting Appium tests - initializing -----------------------------------------")
-
-      driver = await setupDriver()
-      await initializeLog(driver);
-     
+      eventEmitter.log("🚀 ------------------------ Starting Appium tests - initializing ---------------------------")
       let pManager = profileManager.getInstance()
       pManager.init(process.argv[2]);
-      let testCases = (await pManager.readTestProfile()).filter(item => item.enabled);
+      let testProfile = (await pManager.readTestProfile());
+      eventEmitter.log(`testProfile: ${JSON.stringify(testProfile)}`);
+
+      const capabilities = {
+        platformName: `Android`,
+        'appium:deviceName': 'emulator-5554', // Change to your device name from `adb devices`
+        'appium:app': apkPath, // Update with the APK path
+        'appium:appPackage': testProfile.package_name, // Replace with actual package name
+        'appium:appActivity': `.${testProfile.activity_name}`, // Replace with actual main activity
+        'appium:automationName': `${testProfile.automation_name}`,
+        'appium:autoGrantPermissions': true, // Automatically grants permissions
+        'appium:noReset': false, // Ensures app is reinstalled every test run
+        'appium:fullReset': true
+      };
+
+      driver = await setupDriver(capabilities)
+      await initializeLog(driver);
+     
+      let testCases = testProfile.tests.filter(item => item.enabled);
         for(let index = 0; index < testCases.length; index++) {
 
         const testInfo = testCases[index];
-        eventEmitter.log(`-------------------------------------------🔹 Running ${testInfo.name} test ---------------------------------------`)
+        eventEmitter.log(`--------------------------🔹 Running ${testInfo.name} test ------------------------`)
         eventEmitter.testStart(index)
         try {
           // 🔹 Dynamically import the test class
@@ -77,12 +82,15 @@ const capabilities = {
           // 🔹 Execute the test
           const result = await testInstance.execute(driver);
           results.push(result);
-          eventEmitter.log(`----------------------- ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥 ${result.error}` } -----------------------`);
+          eventEmitter.log(`------------- ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥 ${result.error}` } ----------------`);
           eventEmitter.testStop(  index, result.status);
+          if(result.status === TestStatus.FAIL && (testProfile.quit_on_fail || testInfo.quit_on_fail)){
+            break;
+          }
 
         } catch (error: any) {
-          eventEmitter.error(`------------------------------------ ❌ Error loading or executing ${testInfo.name}: ------------------------------------`);
-          eventEmitter.error(`------------------------------------ ❌ ${error.message}: ------------------------------------ ${__dirname}`);
+          eventEmitter.error(`-------------------- ❌ Error loading or executing ${testInfo.name}------------------------`);
+          eventEmitter.error(`-------------------------------- ❌ ${error.message}: ------------------------ ${__dirname}`);
           eventEmitter.testStop( index, TestStatus.FAIL);
           results.push({
             test: testInfo.name,
@@ -90,12 +98,16 @@ const capabilities = {
             status: TestStatus.FAIL,
             error: error.message,
           });
+          
+          if(testProfile.quit_on_fail || testInfo.quit_on_fail){
+            break;
+          }
         }
       }
       eventEmitter.log( `🚀 -------------------------------------------- Appium tests finished -----------------------------------------`);    
     } catch (error) {
       eventEmitter.error( `❌ Test failed ${JSON.stringify(error)}`);
-      
+      eventEmitter.testResult(`FAILED`);
     } finally {
       if (driver) {
         await driver.deleteSession();
@@ -103,16 +115,18 @@ const capabilities = {
       }
     }
 
-    const hasFailed  = results.some(result => result.status === TestStatus.FAIL);
+    const hasFailed  = results.some(result => result.status === TestStatus.FAIL) || results.length === 0;
 
-    eventEmitter.log(`🚀 -------------------------------------------- Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`} -----------------------------------------`);    
+    eventEmitter.log(`🚀 -------------- Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`} --------------`);    
     eventEmitter.testResult(hasFailed ? `FAILED` : `PASSED`);
     stopLogcat();
     await csv.writeRecords(results);
     eventEmitter.log(`📊 Test report saved: ${resultsPath}`);    
   })();
 
-  async function setupDriver() : Promise<WebdriverIO.Browser> {
+
+
+  async function setupDriver(capabilities: any) : Promise<WebdriverIO.Browser> {
    const driver = await remote({
         hostname: process.env.APPIUM_HOST || 'localhost',
         port: 4723,
@@ -120,6 +134,7 @@ const capabilities = {
         capabilities,
       });
       extendBrowser(driver)
+      
       return driver;
   }
 
