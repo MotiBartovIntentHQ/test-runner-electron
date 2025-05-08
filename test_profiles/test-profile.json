@@ -1,4 +1,10 @@
-[
+{
+  "platform" : "Android",
+  "package_name": "com.anagog.jedai.jedaidemo",
+  "activity_name" : "MainActivity",
+  "automation_name": "UiAutomator2",
+  "quit_on_fail" : true,
+  "tests": [
     {
       "name": "Setup and Run",
       "description": "Verify if start button is visible",
@@ -67,3 +73,4 @@
     }
 
   ]
+}

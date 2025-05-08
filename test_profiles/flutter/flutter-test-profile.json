@@ -1,0 +1,87 @@
+{
+ "platform": "Android",
+ "package_name" : "com.anagog.jema.flutter2.sampleapp", 
+ "activity_name": "MainActivity",
+ "automation_name": "Flutter",
+ "quit_on_fail" : true,
+ "tests": [
+  {
+    "name": "Setup and Run",
+    "description": "Verify if start button is visible",
+    "testPath": "./tests/flutter/install_and_run.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+      "name": "Sdk Initialized state disabled",
+      "description": "Verify that SDK disabled on startup",
+      "testPath": "./tests/sdk_initial_state.js",
+      "enabled": false,
+      "quit_on_fail": true
+  },
+  {
+      "name": "Start SDK from menu",
+      "description": "Starting SDK from menu",
+      "testPath": "./tests/start_sdk_test.js",
+      "enabled": false,
+      "quit_on_fail": true
+  },
+  {
+    "name": "Config Download Test",
+    "description": "Verify remote config download",
+    "testPath": "./tests/config_download_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Manifest Download Test",
+    "description": "Verify Manifest download",
+    "testPath": "./tests/manifest_download_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Campaign Artifacts Download",
+    "description": "Verify Campaign Download",
+    "testPath": "./tests/campaign_download_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Camapign Trigger",
+    "description": "Test campaign trigger",
+    "testPath": "./tests/campaign_trigger_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Jema Notification Click",
+    "description": "Click on campaign notification and check result",
+    "testPath": "./tests/jema_notification_clilck_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Generate Reports",
+    "description": "Verify Generate and Send Reports",
+    "testPath": "./tests/generate_reports_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Microsegments Reports",
+    "description": "Verify Microsegments generate and Send Reports",
+    "testPath": "./tests/microsegments_report_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Snapshot Reports",
+    "description": "Verify Snapshot Report generate",
+    "testPath": "./tests/snapshot_report_test.js",
+    "enabled": false,
+    "quit_on_fail": true
+  }
+
+]
+}
