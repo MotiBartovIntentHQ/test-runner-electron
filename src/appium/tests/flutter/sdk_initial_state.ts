@@ -17,8 +17,14 @@ export default class SdkInitialState extends BaseTest {
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
       let testStatus = TestStatus.PASS;
       
-      if(!logs.includes("DISABLED") || logs.includes("SUSPENED")){
+      if(!logs.includes("SDK State Changed from DISABLED to RUNNING")){
         testStatus = TestStatus.FAIL;
+        return {
+          test: this.name,
+          description: this.description,
+          status: testStatus,
+          error: "Unable to find SDK running log",
+        }
       }
 
       return {
