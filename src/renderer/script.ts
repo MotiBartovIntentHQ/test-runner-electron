@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.log("Selected path:", paths[0]);
 
     profilePath = paths[0] || "";
-    profileFileName.textContent = profilePath;
+    profileFileName.textContent =  profilePath.substring(profilePath.lastIndexOf("/") + 1) ;
     consoleOutput.textContent += `🚀 profile selected: ${JSON.stringify(profilePath)}\n`;
     if(profilePath != null) {
       readTestFromJson(profilePath);
@@ -47,7 +47,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.log("Selected path:", paths[0]);
   
     apkPath = paths[0] || "";
-    apkFileName.textContent = apkPath;
+    apkFileName.textContent = apkPath.substring(apkPath.lastIndexOf("/") + 1);
     consoleOutput.textContent += `🚀 apk selected: ${apkPath} \n`;
 
     updateButtonState();

@@ -16,7 +16,7 @@ export default class StartSdkTest extends BaseTest {
 
       
       await this.startSdkFromMenu(driver);
-      await driver.pause(1000);
+      await driver.pause(5000);
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
 
       let status = TestStatus.PASS;
