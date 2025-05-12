@@ -12,11 +12,10 @@ export default class CampaignTriggerTest extends BaseTest {
     this.eventEmitter.log(`Execute Campaign Trigger Test`)
 
     try {
+      //await driver.pause(5000);
+      //await driver.background(10);
+      //await driver.activateApp('com.anagog.jema.flutter2.sampleapp');
       await driver.pause(5000);
-      await driver.background(-1);
-      await driver.pause(5000);
-      await driver.activateApp('com.anagog.jema.flutter2.sampleapp');
-      await driver.pause(15000);
 
       const currentDir = process.cwd();
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");

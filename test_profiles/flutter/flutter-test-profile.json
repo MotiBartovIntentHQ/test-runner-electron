@@ -50,8 +50,8 @@
   {
     "name": "Jema Notification Click",
     "description": "Click on campaign notification and check result",
-    "testPath": "./tests/jema_notification_clilck_test.js",
-    "enabled": false,
+    "testPath": "./tests/flutter/jema_notification_clilck_test.js",
+    "enabled": true,
     "quit_on_fail": true
   },
   {
