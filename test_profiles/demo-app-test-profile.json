@@ -41,6 +41,13 @@
       "quit_on_fail" : true
     },
     {
+      "name": "Page Visit",
+      "description": "Verifying PageVisit ",
+      "testPath": "./tests/page_visit.js",
+      "enabled": true,
+      "quit_on_fail" : true
+    },
+    {
       "name": "Manifest Download Test",
       "description": "Verify Manifest download",
       "testPath": "./tests/manifest_download_test.js",
