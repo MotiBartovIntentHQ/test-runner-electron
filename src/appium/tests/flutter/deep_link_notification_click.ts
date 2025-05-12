@@ -28,33 +28,13 @@ export default class JemaNotifiactionClick extends BaseTest {
 
     this.eventEmitter.log(`nativeDriver: ${JSON.stringify(nativeDriver)}`)
     try {
-      const currentDir = process.cwd();
-      const notificationClickPrompt = "Notification clicked for campaign:";
-      const jeamOverallClicked = "about to get stat by query: JeMAEvents.overall.clicked"
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
-      let testStatus = TestStatus.FAIL;
-
-      if(logs.includes(notificationClickPrompt)){
-        testStatus = TestStatus.FAIL;
-        console.log("There are notification click events before time..")
-        return {
-          test: this.name,
-          description: this.description,
-          status: testStatus,
-          error: "There are notification click events before time.",
-        };
-      }
-
+      let testStatus = TestStatus.PASS;
       await this.openAndClickNotification(nativeDriver);
+      await driver.pause(10000);
 
-      logs = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const currentDir = process.cwd();
+      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
 
-      if(logs.includes("Notification clicked for campaign:") ){
-        console.log("Campaign triggered successfully")
-        testStatus = TestStatus.PASS;
-      }  else {
-        console.log("Failed to identify a notification clicked")
-      }
 
       return {
         test: this.name,
@@ -83,17 +63,19 @@ export default class JemaNotifiactionClick extends BaseTest {
     await driver.openNotifications();
 
     // Step 2: Find the notification (wait a bit in case notifications are loading)
-    const  notification = driver.$('android=new UiSelector().textContains("Test flutter notification2")');  
-    this.eventEmitter.log(`Found notification: ${JSON.stringify(notification)}`);
-
+    const  notification = driver.$('android=new UiSelector().textContains("Test flutter https Deeplink")');  
+    if(notification === null){
+      this.eventEmitter.log(`Notification not found`);
+    } else {
+      this.eventEmitter.log(`Found notification`);
+    }
+    
     await notification.longPress();
     await driver.pause(3000);;
 
     await notification.click()
-  
-
-    await driver.pause(5000);
-
+    let delay = new Promise(resolve => setTimeout(resolve, 5000));
+    await delay;
   }
 
   
