@@ -26,6 +26,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   let profilePath = "";
   let apkPath = "";
 
+  let testing = false;
+
   profileInput.onclick = async () => {
     consoleOutput.textContent += `🚀 addEventListener: click\n`;
 
@@ -54,7 +56,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   };
 
   function updateButtonState() {
-    runBtn.disabled = !(profilePath && apkPath);
+    runBtn.disabled = !(profilePath && apkPath) || testing;
   }
 
   runBtn.onclick = async () => {
@@ -139,6 +141,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     statusIndicator.style.backgroundColor = "#e20d0d";
     statusIndicatorText.textContent = "FAILED 🙁"
    }
+   testing = false;
+   updateButtonState();
   }
 
   function clearTestsList(){
@@ -161,6 +165,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     clearConsole()
     statusIndicator.style.backgroundColor = "#e4cb12";
     statusIndicatorText.textContent = "Running ⏳"
+    testing = true;
+    updateButtonState()
   }
 
   (window as any).electronApi.onProcessUpdate((msg: any) => {
