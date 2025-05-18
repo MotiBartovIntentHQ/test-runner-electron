@@ -50,6 +50,8 @@ export default class DeepLinkNotificationClick extends BaseTest {
         };
       }
 
+      await nativeDriver.back();
+
       return {
         test: this.name,
         description: this.description,
