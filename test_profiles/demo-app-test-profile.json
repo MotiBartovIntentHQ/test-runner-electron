@@ -48,6 +48,13 @@
       "quit_on_fail" : true
     },
     {
+      "name": "OnBoarding",
+      "description": "Verifying PageVisit ",
+      "testPath": "./tests/onboarding.js",
+      "enabled": true,
+      "quit_on_fail" : true
+    },
+    {
       "name": "Manifest Download Test",
       "description": "Verify Manifest download",
       "testPath": "./tests/manifest_download_test.js",
