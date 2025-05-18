@@ -21,6 +21,8 @@ export default class PageVisitTest extends BaseTest {
       const pageLastVisitDateLog = "about to set stats in cache: PageLastVisitDate"
       const pageLastVisitLog = "about to set stats in cache: PageLastVisit"
 
+      const pageLastVisitLambdaLog = "about to run event[PageVisit]"
+  
       
       let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
       let testStatus = TestStatus.PASS;
@@ -60,6 +62,16 @@ export default class PageVisitTest extends BaseTest {
         };
       }
 
+      // if(!logs.includes(pageLastVisitLambdaLog) ){
+      //   testStatus = TestStatus.FAIL;
+      //   const error = "Unable to find PageVisit AppEvent lambda log";
+      //   return {
+      //     test: this.name,
+      //     description: this.description,
+      //     status: testStatus,
+      //     error: error,
+      //   };
+      // }
 
       return {
         test: this.name,

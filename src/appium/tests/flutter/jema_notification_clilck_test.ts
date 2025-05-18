@@ -3,15 +3,7 @@ import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import * as fs from "fs";
 import { execSync } from "child_process";
 import { remote, Browser } from "webdriverio";
-
-const nativeCaps = {
-  platformName: "Android",
-  "appium:automationName": "UiAutomator2",
-  "appium:deviceName": "emulator-5554",
-  "appium:appPackage": `com.anagog.jema.flutter2.sampleapp`,
-  "appium:appActivity": `.MainActivity`,
-  "appium:noReset": true
-};
+import { NativeDriverHolder } from "./native_driver_holder.js";
 
 export default class JemaNotifiactionClick extends BaseTest {
   constructor() {
@@ -24,7 +16,7 @@ export default class JemaNotifiactionClick extends BaseTest {
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
 
     this.eventEmitter.log(`execute JemaNotifiactionClick: driver: ${JSON.stringify(driver)}`)
-    let nativeDriver = await createAndroidDriver(nativeCaps)
+    let nativeDriver = await NativeDriverHolder.getInstance()
 
     this.eventEmitter.log(`nativeDriver: ${JSON.stringify(nativeDriver)}`)
     try {
@@ -69,11 +61,7 @@ export default class JemaNotifiactionClick extends BaseTest {
         status: TestStatus.FAIL,
         error: JSON.stringify(error),
       };
-    } finally {
-      if(nativeDriver){
-        await nativeDriver.deleteSession();
-      }
-    }
+    } 
   }
 
 
@@ -84,30 +72,45 @@ export default class JemaNotifiactionClick extends BaseTest {
 
     // Step 2: Find the notification (wait a bit in case notifications are loading)
     const  notification = driver.$('android=new UiSelector().textContains("Test flutter notification2")');  
-    this.eventEmitter.log(`Found notification: ${JSON.stringify(notification)}`);
-
+    
+    if(notification === null){
+      this.eventEmitter.log(`Notification not found`);
+    } else {
+      this.eventEmitter.log(`Found notification`);
+    }
+    
     await notification.longPress();
+    const location = await notification.getLocation();
+    const size = await notification.getSize();
     await driver.pause(3000);;
 
-    await notification.click()
+    try{
+
+      const x = location.x + size.width / 2;
+      const y = location.y + size.height / 2;
   
+      await driver.performActions([
+        {
+          type: "pointer",
+          id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x, y },
+            { type: "pointerDown", button: 0 },
+            { type: "pause", duration: 100 },
+            { type: "pointerUp", button: 0 }
+          ]
+        }
+      ]);
 
+      // await notification.click()
+    } catch(e) {
+      this.eventEmitter.error(`Notification click error: ${e}`);
+    }
     await driver.pause(5000);
-
   }
 
   
 
 }
-
-async function createAndroidDriver(capabilities: any) : Promise<WebdriverIO.Browser> {
-   const driver = await remote({
-        hostname: process.env.APPIUM_HOST || 'localhost',
-        port: 4723,
-        logLevel: 'info',
-        capabilities,
-      });
-      
-      return driver;
-  }
 

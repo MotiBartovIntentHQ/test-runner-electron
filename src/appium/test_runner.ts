@@ -110,7 +110,11 @@ const apkPath = process.argv[3];
       eventEmitter.testResult(`FAILED`);
     } finally {
       if (driver) {
-        await driver.deleteSession();
+        try{
+          //await driver.deleteSession();
+        } catch (e) {
+          eventEmitter.error( `🎯 Failed to delete driver session: ${e}`);    
+        }
         eventEmitter.log( `🎯 Test completed!`);    
       }
     }

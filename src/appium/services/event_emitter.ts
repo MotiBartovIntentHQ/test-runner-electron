@@ -46,7 +46,7 @@ export class EventEmitterImpl implements EventEmitter {
     }
 
     emit(message: object) {
-        process.stdout.write(JSON.stringify(message) + "\\n");
+        process.stdout.write(`${JSON.stringify(message)}\\n`);
     }
 }
 

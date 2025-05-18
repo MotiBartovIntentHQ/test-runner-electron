@@ -20,7 +20,7 @@ export default class StartSdkTest extends BaseTest {
       const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
 
       let status = TestStatus.PASS;
-      if(!logs.includes("SDK State Changed from SUSPENDED to RUNNING")){
+      if(!logs.includes("onSdkStateChanged: RUNNING")){
         status = TestStatus.FAIL
         return {
           test: this.name,

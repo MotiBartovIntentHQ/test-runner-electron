@@ -17,7 +17,6 @@ export default class InstallAndRun extends BaseTest {
         const capabilities = JSON.parse(JSON.stringify(driver.capabilities));
         this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
         const element = await driver.execute('flutter:waitFor', flutterFinder.byValueKey('Application Title'));
-        //const element = await driver.findElement("flutter", "Application Title");
         this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
         const viewExists = element != null
       return {

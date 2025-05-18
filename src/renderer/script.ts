@@ -179,7 +179,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         case "error": consoleOutput.textContent += msg.content + "\n";
       }
     } else {
-      consoleOutput.textContent += msg + "\n";
+      consoleOutput.textContent += `ProcessUpdate: ${msg}` + "\n";
     }
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
   });
