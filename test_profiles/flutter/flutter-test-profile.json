@@ -27,6 +27,20 @@
       "quit_on_fail": true
   },
   {
+    "name": "Pending APIS Test",
+    "description": "Verify pending APIs logic",
+    "testPath": "./tests/flutter/api_pending_queue.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
+    "name": "Page Visit",
+    "description": "Verifying PageVisit ",
+    "testPath": "./tests/flutter/page_visit.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
     "name": "Manifest Download Test",
     "description": "Verify Manifest download",
     "testPath": "./tests/manifest_download_test.js",
