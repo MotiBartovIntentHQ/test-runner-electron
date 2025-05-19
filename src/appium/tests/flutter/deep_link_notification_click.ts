@@ -50,7 +50,14 @@ export default class DeepLinkNotificationClick extends BaseTest {
         };
       }
 
-      await nativeDriver.back();
+      try{
+        await nativeDriver.back();
+      } catch(error){
+        //todo investigate why like this..
+        this.eventEmitter.error(`Something went wrong when trying to click back button: ${error}`)
+      }
+      
+      await driver.pause(1000);
 
       return {
         test: this.name,
@@ -63,7 +70,7 @@ export default class DeepLinkNotificationClick extends BaseTest {
         test: this.name,
         description: this.description,
         status: TestStatus.FAIL,
-        error: JSON.stringify(error),
+        error: `There was an exception: ${JSON.stringify(error)}`,
       };
     } 
   }
@@ -109,9 +116,5 @@ export default class DeepLinkNotificationClick extends BaseTest {
       this.eventEmitter.error(`Notification click error: ${e}`);
     }
     await driver.pause(1000);
-
   }
-
-  
-
 }

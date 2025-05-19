@@ -23,6 +23,7 @@ export class NativeDriverHolder {
 
     NativeDriverHolder.instance = await createAndroidDriver(nativeCaps);
 
+    
     return NativeDriverHolder.instance;
   }
 

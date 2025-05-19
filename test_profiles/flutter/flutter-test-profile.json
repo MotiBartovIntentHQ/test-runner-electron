@@ -62,6 +62,27 @@
     "quit_on_fail": true
   },
   {
+    "name": "Generate Reports",
+    "description": "Verify Generate and Send Reports",
+    "testPath": "./tests/flutter/generate_reports_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Microsegments Reports",
+    "description": "Verify Microsegments generate and Send Reports",
+    "testPath": "./tests/flutter/microsegments_report_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Snapshot Reports",
+    "description": "Verify Snapshot Report generate",
+    "testPath": "./tests/flutter/snapshot_report_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
     "name": "Jema Notification Click",
     "description": "Click on campaign notification and check result",
     "testPath": "./tests/flutter/jema_notification_clilck_test.js",
@@ -73,27 +94,6 @@
     "description": "Click on campaign notification and check result",
     "testPath": "./tests/flutter/deep_link_notification_click.js",
     "enabled": true,
-    "quit_on_fail": true
-  },
-  {
-    "name": "Generate Reports",
-    "description": "Verify Generate and Send Reports",
-    "testPath": "./tests/generate_reports_test.js",
-    "enabled": false,
-    "quit_on_fail": true
-  },
-  {
-    "name": "Microsegments Reports",
-    "description": "Verify Microsegments generate and Send Reports",
-    "testPath": "./tests/microsegments_report_test.js",
-    "enabled": false,
-    "quit_on_fail": true
-  },
-  {
-    "name": "Snapshot Reports",
-    "description": "Verify Snapshot Report generate",
-    "testPath": "./tests/snapshot_report_test.js",
-    "enabled": false,
     "quit_on_fail": true
   }
 ]
