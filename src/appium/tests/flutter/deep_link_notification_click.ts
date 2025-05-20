@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import * as fs from "fs";
 import { execSync } from "child_process";
 import { remote, Browser } from "webdriverio";
 import { NativeDriverHolder } from "./native_driver_holder.js";
@@ -22,8 +21,7 @@ export default class DeepLinkNotificationClick extends BaseTest {
 
       const deepLinkLog = "About to handle linkUrl: "
 
-      const currentDir = process.cwd();
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      let logs = this.logs();
 
       if(!logs.includes(deepLinkLog)){
         return {

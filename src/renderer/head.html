@@ -4,7 +4,7 @@
 
     <style>
         body {
-          margin: 50;
+        
           font-family: sans-serif;
         }
     
@@ -16,9 +16,8 @@
         .left-pane {
           flex: 1;
           background-color: #f2f2f2;
-          border-right: 1px solid #ccc;
+          border-right: 2px solid #ccc;
           border: 2px inset #ccc;
-          justify-content: left;
         }
     
         .right-pane {
@@ -31,14 +30,7 @@
     
         ul {
           justify-content: left;
-          width: 100%;
-           
-        }
-    
-        li {
-          cursor: pointer;
-          border-bottom: 1px solid #ccc;
-          justify-content: left;
+          width: 100%;  
         }
     
         li:hover {
@@ -57,11 +49,12 @@
         }
         .list-item {
           display: flex; /* Allow content and icon on same line */
-          justify-content: space-between; /* Push text and icon apart */
+          justify-content: left; /* Push text and icon apart */
           align-items: center; /* Center vertically */
-          padding: 5px 15px;
+          padding: 5px 5px;
           cursor: pointer; /* Pointer cursor on hover */
           border-bottom: 1px solid #ddd; /* Optional: item divider */
+          width: 100%;
         }
         .list-item.selected {
           background-color: #e0f7fa; /* Light blue background to simulate selection */

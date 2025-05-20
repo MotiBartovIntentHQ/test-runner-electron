@@ -1,3 +1,4 @@
+import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import { EventEmitterImpl } from "../../services/event_emitter.js";
 const flutterFinder = require("appium-flutter-finder");
@@ -15,9 +16,24 @@ export default class InstallAndRun extends BaseTest {
          await driver.execute('flutter:clearTimeline');
          await driver.execute('flutter:forceGC');
         const capabilities = JSON.parse(JSON.stringify(driver.capabilities));
+        const logs: string = super.logs();
+        
+        const welcomeToJedAiPrompt = "Welcome to JedAI"
+        const sdkInizializationCompleted = "JedAI initialization completed"
+
+        if(!logs.includes(welcomeToJedAiPrompt) || !logs.includes(sdkInizializationCompleted)){
+          return {
+            test: this.name,
+            description: this.description,
+            status:  TestStatus.FAIL,
+            error: "Unable to find SDK initialization prompts",
+          };
+        }
+
         this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
         const element = await driver.execute('flutter:waitFor', flutterFinder.byValueKey('Application Title'));
         this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
+
         const viewExists = element != null
       return {
         test: this.name,

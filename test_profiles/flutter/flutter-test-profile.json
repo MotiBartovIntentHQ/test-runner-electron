@@ -27,6 +27,13 @@
       "quit_on_fail": true
   },
   {
+    "name": "Pending APIS Test",
+    "description": "Verify pending APIs logic",
+    "testPath": "./tests/flutter/api_pending_queue.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
     "name": "Set User Defined Stats",
     "description": "Set User Defined Stats",
     "testPath": "./tests/flutter/set_custom_microsegments_test.js",
@@ -39,13 +46,6 @@
     "testPath": "./tests/flutter/get_custom_microsegments_test.js",
     "enabled": true,
     "quit_on_fail": true
-  },
-  {
-    "name": "Pending APIS Test",
-    "description": "Verify pending APIs logic",
-    "testPath": "./tests/flutter/api_pending_queue.js",
-    "enabled": true,
-    "quit_on_fail" : true
   },
   {
     "name": "Page Visit",

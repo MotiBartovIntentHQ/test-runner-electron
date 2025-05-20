@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import * as fs from "fs";
 
 export default class SnapshotReportTest extends BaseTest {
   constructor() {
@@ -12,12 +11,8 @@ export default class SnapshotReportTest extends BaseTest {
     this.eventEmitter.log("Reports Test");
 
     try {
-      const currentDir = process.cwd();
-
-      
       await driver.pause(10000);
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
-
+      const logs = this.logs();
       
       let status = TestStatus.PASS;
       if(!logs.includes("about to generate report: factoryName: MicrosegmentsSnapshot")){

@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import * as fs from "fs";
 import {byValueKey} from "appium-flutter-finder";
 
 export default class CustomMicroSegmentsTest extends BaseTest {
@@ -13,7 +12,6 @@ export default class CustomMicroSegmentsTest extends BaseTest {
     this.eventEmitter.log("CustomMicroSegmentsTest");
 
     try {
-      const currentDir = process.cwd();
       
       let buttonFinder = byValueKey("setCustomMicroSegments")
       
@@ -21,7 +19,7 @@ export default class CustomMicroSegmentsTest extends BaseTest {
       await driver.elementClick(buttonFinder);
       await driver.pause(2000);
 
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const logs = this.logs();
       let status = TestStatus.PASS;
 
 
