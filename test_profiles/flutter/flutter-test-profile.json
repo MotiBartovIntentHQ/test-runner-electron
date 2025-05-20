@@ -76,6 +76,13 @@
     "quit_on_fail": true
   },
   {
+    "name": "Fire MicroMoment",
+    "description": "Fire MicroMoment test ",
+    "testPath": "./tests/flutter/fire_micromoment_test.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
     "name": "Generate Reports",
     "description": "Verify Generate and Send Reports",
     "testPath": "./tests/flutter/generate_reports_test.js",
