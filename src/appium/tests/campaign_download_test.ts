@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class CampaignDownloadTest extends BaseTest {
   constructor() {
@@ -14,9 +13,8 @@ export default class CampaignDownloadTest extends BaseTest {
 
 
     try {
-      const currentDir = process.cwd();
       await driver.pause(10000);
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const logs = this.logs();
 
       let testStatus = TestStatus.FAIL;
       const regex = /https:\/\/[^\/]+\.s3\.amazonaws\.com\/[^\/]+\/[^\/]+\/[^\/]+\.campaign\.zip completed successfully/;

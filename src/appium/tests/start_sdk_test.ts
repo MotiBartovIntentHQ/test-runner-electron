@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class StartSdkTest extends BaseTest {
   constructor() {
@@ -12,12 +11,10 @@ export default class StartSdkTest extends BaseTest {
     this.eventEmitter.log("StartSdkTest Test");
 
     try {
-      const currentDir = process.cwd();
-
       
       await this.startSdkFromMenu(driver);
       await driver.pause(5000);
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const logs = this.logs();
 
       let status = TestStatus.PASS;
       if(!logs.includes("onSdkStateChanged: RUNNING")){

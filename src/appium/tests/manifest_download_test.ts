@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class ManifestDownloadTest extends BaseTest {
   constructor() {
@@ -16,7 +15,7 @@ export default class ManifestDownloadTest extends BaseTest {
       this.eventEmitter.log(`Waiting for manifest download `);
       await driver.pause(5000);
 
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const logs = this.logs();
 
       let testStatus = TestStatus.PASS;
       

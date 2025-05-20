@@ -18,6 +18,8 @@ export default class InstallAndRun extends BaseTest {
         const capabilities = JSON.parse(JSON.stringify(driver.capabilities));
         const logs: string = super.logs();
         
+        this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
+
         const welcomeToJedAiPrompt = "Welcome to JedAI"
         const sdkInizializationCompleted = "JedAI initialization completed"
 
@@ -30,7 +32,6 @@ export default class InstallAndRun extends BaseTest {
           };
         }
 
-        this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
         const element = await driver.execute('flutter:waitFor', flutterFinder.byValueKey('Application Title'));
         this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
 

@@ -18,9 +18,6 @@ console.log(`🚀 Logcat collected at ${logFilePath}`);
 
 // ✅ Handle process exit and cleanup
 
-
-
-
 export const startLogcat = (packageName : String) => {
     const pid = execSync(`adb shell pidof -s ${packageName}`).toString().trim()
 
@@ -41,7 +38,6 @@ export const stopLogcat = () => {
   console.log("\n🛑 Stopping logcat...");
   logcatProcess.kill(); // Kill the logcat process
   logStream.end(); // Close the log file
-  process.exit(0);
 };
 
 export const clearLogcat = () => {

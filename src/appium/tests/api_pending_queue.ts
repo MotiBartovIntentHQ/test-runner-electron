@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class ApiPendingQueue extends BaseTest {
   constructor() {
@@ -11,13 +10,12 @@ export default class ApiPendingQueue extends BaseTest {
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     console.log("execute ApiPendingQueue");
     try {
-      const currentDir = process.cwd();
       const pageVisitPendingLog = "SDK not running yet, enqueue pending operation AnagogActiveImpl::enterPage";
       const pendingSdkVersionLog = "SDK not running yet, enqueue pending operation AnagogActiveImpl::getVersion till it will start to run";
 
       const pendingApisLog = /There are \d+ enqueued pending operation/
       const flushPendingApis = /There are \d+ pending operation, executing them all/
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      let logs = this.logs();
       let testStatus = TestStatus.PASS;
 
       const pendingApiLogMatchResult = pendingApisLog.test(logs);

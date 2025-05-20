@@ -111,7 +111,7 @@ const apkPath = process.argv[3];
     } finally {
       if (driver) {
         try{
-          //await driver.deleteSession();
+          await driver.deleteSession();
         } catch (e) {
           eventEmitter.error( `🎯 Failed to delete driver session: ${e}`);    
         }
@@ -122,10 +122,10 @@ const apkPath = process.argv[3];
     const hasFailed  = results.some(result => result.status === TestStatus.FAIL) || results.length === 0;
 
     eventEmitter.log(`🚀 -------------- Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`} --------------`);    
-    eventEmitter.testResult(hasFailed ? `FAILED` : `PASSED`);
     stopLogcat();
     await csv.writeRecords(results);
-    eventEmitter.log(`📊 Test report saved: ${resultsPath}`);    
+    eventEmitter.log(`📊 Test report saved: ${resultsPath}`);   
+    eventEmitter.testResult(hasFailed ? `FAILED` : `PASSED`); 
   })();
 
 

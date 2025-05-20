@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class PageVisitTest extends BaseTest {
   constructor() {
@@ -23,8 +22,7 @@ export default class PageVisitTest extends BaseTest {
 
       const pageLastVisitLambdaLog = "about to run event[PageVisit]"
   
-      
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      let logs = this.logs();
       let testStatus = TestStatus.PASS;
 
 
