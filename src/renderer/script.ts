@@ -114,24 +114,22 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
     const icon = li.querySelector<HTMLSpanElement>(".icon");
 
-    if(status === "running"){ 
-      li.classList.add("selected");
-    } else {
-      li.classList.remove("selected");
-    }
-
     if(!icon){
       return;
     } 
-
-    if(status !== "running"){
+    
+    if(status === "running"){ 
+      icon.textContent = "⏳";
+      li.classList.add("selected");
+    } else {
+      li.classList.remove("selected");
       if(status === "PASS"){
         icon.textContent = "✅";
       } else {
         icon.textContent = "❌";
       }
     } 
-  }
+    }
 
   function updateTestResult(status: string){
    if(status === "PASSED") {
