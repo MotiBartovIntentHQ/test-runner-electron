@@ -38,9 +38,9 @@
         ul {
           margin: 0;
           padding: 0;
-          list-style: none;
-          height: 100%;
-          width: 100%;        
+          list-style: none;        
+          width: 100%; 
+          overflow-y: auto;       
         }
     
         li:hover {
@@ -63,6 +63,7 @@
           justify-content: space-between; /* Push text and icon apart */
           align-items: center; /* Center vertically */          
           cursor: pointer; /* Pointer cursor on hover */
+          pointer-events: none;
           padding: 1%;
           border-bottom: 1px solid #ddd; /* Optional: item divider */
         }

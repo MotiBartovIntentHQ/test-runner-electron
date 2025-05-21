@@ -130,6 +130,13 @@
     "testPath": "./tests/flutter/plugin_event_emitter_test.js",
     "enabled": true,
     "quit_on_fail" : true
+  },
+  {
+    "name": "Plugin BackgroundEventEmitter Test",
+    "description": "Test SDK EventEmitter functionality",
+    "testPath": "./tests/flutter/plugin_headless_emitter.js",
+    "enabled": true,
+    "quit_on_fail" : true
   }
 ]
 }
