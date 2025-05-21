@@ -95,6 +95,13 @@
       "testPath": "./tests/snapshot_report_test.js",
       "enabled": true,
       "quit_on_fail" : true
+    },
+    {
+      "name": "SDK EventEmitter Test",
+      "description": "Test SDK EventEmitter functionality",
+      "testPath": "./tests/sdk_event_emitter_test.js",
+      "enabled": true,
+      "quit_on_fail" : true
     }
 
   ]
