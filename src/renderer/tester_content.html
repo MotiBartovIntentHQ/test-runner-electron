@@ -1,44 +1,48 @@
 <content>
     <h2>🧪 Edge Sdk Automation Test Stand</h2>
-
-  <div style="display: flex;"> 
-    <div style="width: 60%;">
-      <div>
-        <!-- <label for="profileInput" class="file-label">📂 Choose Test Profile</label> -->
-        <button id="profileInput">📂 Choose Test Profile</button>
-        <label class="file-label"> | </label>
-        <label id="profileFileName"></label>
-      </div><br>
-      <div>
-        <button id="apkInput">📱 Choose Test Apk</button>
-        <label class="file-label"> | </label>
-        <label id="apkFileName"></label>
-      </div><br>
-      <button id="runBtn" disabled>Run Tests</button>
-    </div>
-    <div id="test-stauts-container" class="test-status-container">
-      <div id="test-status-continer-text" class="test-status-continer-text"></div>
-    </div>
-  </div>
-  <div>
-    <br>
-  </div>
-  <div class="container">
-    <div class="left-pane">
-        <div style="color: #000;">
-          <ul id="testsList">
-          </ul>
+  <div class="content_wrapper">
+    <div class="top"> 
+      <div style="display: flex;">
+        <div style="width: 60%;">
+          <div>
+            <!-- <label for="profileInput" class="file-label">📂 Choose Test Profile</label> -->
+            <button id="profileInput">📂 Choose Test Profile</button>
+            <label class="file-label"> | </label>
+            <label id="profileFileName"></label>
+          </div><br>
+          <div>
+            <button id="apkInput">📱 Choose Test Apk</button>
+            <label class="file-label"> | </label>
+            <label id="apkFileName"></label>
+          </div><br>
+          <button id="runBtn" disabled>Run Tests</button>
         </div>
+        <div id="test-stauts-container" class="test-status-container">
+          <div id="test-status-continer-text" class="test-status-continer-text"></div>
+        </div>
+      </div>
+      
     </div>
-    <div class="right-pane">
-        <pre id="consoleOutput" style="background:#111;
-                                       color:#0f0;
-                                       padding-left:10px;
-                                       padding-right: 10px;
-                                       height: 70vh;
-                                       overflow:auto;
-                                       overflow-y: auto;"></pre>
+    <div class="bottom">
+      <div class="container">
+        <div class="left-pane">
+            <div style="color: #000;">
+              <ul id="testsList">
+              </ul>
+            </div>
+        </div>
+        <div class="right-pane">
+            <pre id="consoleOutput" style="background:#111;
+                                           color:#0f0;
+                                           padding-left:10px;
+                                           padding-right: 10px;
+                                           height: 70vh;
+                                           overflow:auto;
+                                           overflow-y: auto;"></pre>
+        </div>
+      </div>
     </div>
   </div>
+
 
 </content>

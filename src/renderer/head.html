@@ -5,15 +5,31 @@
     <style>
         body {
           font-family: sans-serif;
-          
-        }
-    
-        .container {
-          display: flex;
           height: 100%;
-          width: 100%;
         }
     
+        .content_wrapper {
+          display: flex;
+          flex-direction: column;
+          height: 80%;
+        }
+
+        .top {          
+          margin: 0;
+          padding: 0;
+          padding: 10px;      
+        }
+
+        .bottom {
+          flex: 1;
+          margin: 0;
+          padding: 0;
+        }
+
+        .container{
+          display: flex;
+        }
+
         .left-pane {
           width: 25%;
           background-color: #f2f2f2;
@@ -22,6 +38,7 @@
           border-bottom-left-radius: 10px;
           border-top-left-radius: 10px;
           box-sizing: border-box;
+          overflow: hidden; 
         }
     
         .right-pane {
@@ -38,7 +55,8 @@
         ul {
           margin: 0;
           padding: 0;
-          list-style: none;        
+          list-style: none;   
+          height: 100%;     
           width: 100%; 
           overflow-y: auto;       
         }
