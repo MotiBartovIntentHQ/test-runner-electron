@@ -18,7 +18,8 @@ export class NativeDriverHolder {
         "appium:deviceName": "emulator-5554",
         "appium:appPackage": `com.anagog.jema.flutter2.sampleapp`,
         "appium:appActivity": `.MainActivity`,
-        "appium:noReset": true
+        "appium:noReset": true,
+        "appium:newCommandTimeout": 300
       };
 
     NativeDriverHolder.instance = await createAndroidDriver(nativeCaps);

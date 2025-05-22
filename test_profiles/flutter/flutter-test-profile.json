@@ -137,6 +137,13 @@
     "testPath": "./tests/flutter/plugin_headless_emitter.js",
     "enabled": true,
     "quit_on_fail" : true
+  },
+  {
+    "name": "SDK Background Wakeup Test",
+    "description": "Test SDK Background wakeup test",
+    "testPath": "./tests/flutter/sdk_background_wakeup_test.js",
+    "enabled": true,
+    "quit_on_fail" : true
   }
 ]
 }

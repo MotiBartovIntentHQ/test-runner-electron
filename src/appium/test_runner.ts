@@ -59,7 +59,8 @@ const apkPath = process.argv[3];
         'appium:automationName': `${testProfile.automation_name}`,
         'appium:autoGrantPermissions': true, // Automatically grants permissions
         'appium:noReset': false, // Ensures app is reinstalled every test run
-        'appium:fullReset': true
+        'appium:fullReset': true,
+        'appium:newCommandTimeout': 300
       };
 
       driver = await setupDriver(capabilities)
