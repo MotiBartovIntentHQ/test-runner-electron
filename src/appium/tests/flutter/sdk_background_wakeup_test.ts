@@ -1,7 +1,7 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import { clearLogcat, startLogcat, stopLogcat } from '../../services/logcat.js';
-import { NativeDriverHolder } from "./native_driver_holder.js";
+import { NativeDriverHolder } from "../../services/native_driver_holder.js";
 import { spawn, execSync, ChildProcessByStdio } from "child_process";
 import { swipeAndroidApp } from "../../services/app_swiper.js";
 

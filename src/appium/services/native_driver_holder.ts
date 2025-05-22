@@ -1,30 +1,31 @@
+import { EventEmitterImpl } from './event_emitter';
 import { remote, Browser } from 'webdriverio';
-
 export class NativeDriverHolder {
   private static instance: WebdriverIO.Browser| null = null;
 
   private constructor() {} // private constructor to prevent instantiation
 
+  private static nativeCaps = {
+    platformName: "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "emulator-5554",
+    "appium:appPackage": `com.anagog.jema.flutter2.sampleapp`,
+    "appium:appActivity": `.MainActivity`,
+    "appium:noReset": true,
+    "appium:fullReset": false,
+    "appium:autoLaunch": false,
+    "appium:newCommandTimeout": 300
+  };
+
   public static async getInstance(): Promise<WebdriverIO.Browser> {
     if (NativeDriverHolder.instance) {
+        EventEmitterImpl.getInstance().log(`Return existing NativeDriver`)
+      
       return NativeDriverHolder.instance;
     }
 
-    console.log("🚀 Creating native Appium driver (UiAutomator2)...");
-
-    const nativeCaps = {
-        platformName: "Android",
-        "appium:automationName": "UiAutomator2",
-        "appium:deviceName": "emulator-5554",
-        "appium:appPackage": `com.anagog.jema.flutter2.sampleapp`,
-        "appium:appActivity": `.MainActivity`,
-        "appium:noReset": true,
-        "appium:newCommandTimeout": 300
-      };
-
-    NativeDriverHolder.instance = await createAndroidDriver(nativeCaps);
-
-    
+    EventEmitterImpl.getInstance().log("🚀 Creating native Appium driver (UiAutomator2)...")
+    NativeDriverHolder.instance = await createAndroidDriver(NativeDriverHolder.nativeCaps);
     return NativeDriverHolder.instance;
   }
 
@@ -32,7 +33,7 @@ export class NativeDriverHolder {
     if (NativeDriverHolder.instance) {
       await NativeDriverHolder.instance.deleteSession();
       NativeDriverHolder.instance = null;
-      console.log("🧹 Native driver session destroyed.");
+      EventEmitterImpl.getInstance().log("🧹 Native driver session destroyed.")
     }
   }
 }

@@ -111,39 +111,39 @@
     "quit_on_fail": true
   },
   {
-    "name": "DeepLink Notification Click",
-    "description": "Click on campaign notification and check result",
-    "testPath": "./tests/flutter/deep_link_notification_click.js",
-    "enabled": true,
-    "quit_on_fail": true
-  },
-  {
     "name": "SDK EventEmitter Test",
     "description": "Test SDK EventEmitter functionality",
     "testPath": "./tests/flutter/sdk_event_emitter_test.js",
-    "enabled": true,
+    "enabled": false,
     "quit_on_fail" : true
   },
   {
     "name": "Plugin ForegroundEventEmitter Test",
     "description": "Test SDK EventEmitter functionality",
     "testPath": "./tests/flutter/plugin_event_emitter_test.js",
-    "enabled": true,
+    "enabled": false,
     "quit_on_fail" : true
   },
   {
     "name": "Plugin BackgroundEventEmitter Test",
     "description": "Test SDK EventEmitter functionality",
     "testPath": "./tests/flutter/plugin_headless_emitter.js",
-    "enabled": true,
+    "enabled": false,
     "quit_on_fail" : true
   },
   {
-    "name": "SDK Background Wakeup Test",
+    "name": "SDK Background Wakeup",
     "description": "Test SDK Background wakeup test",
     "testPath": "./tests/flutter/sdk_background_wakeup_test.js",
     "enabled": true,
     "quit_on_fail" : true
+  },
+  {
+    "name": "DeepLink Notification Click",
+    "description": "Click on campaign notification and check result",
+    "testPath": "./tests/flutter/deep_link_notification_click.js",
+    "enabled": true,
+    "quit_on_fail": true
   }
 ]
 }

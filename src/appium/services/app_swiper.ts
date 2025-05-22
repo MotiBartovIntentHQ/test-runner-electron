@@ -2,7 +2,7 @@
 
 export  const  swipeAndroidApp = async (driver: WebdriverIO.Browser) => {
     await driver.pressKeyCode(187); // KEYCODE_APP_SWITCH
-    await driver.pause(1000); 
+    await driver.pause(500); 
     await driver.performActions([
         {
           type: "pointer",

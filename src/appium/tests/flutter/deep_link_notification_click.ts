@@ -2,7 +2,10 @@ import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import { execSync } from "child_process";
 import { remote, Browser } from "webdriverio";
-import { NativeDriverHolder } from "./native_driver_holder.js";
+import { NativeDriverHolder } from "../../services/native_driver_holder.js";
+import { byValueKey } from "appium-flutter-finder";
+import { clearLogcat, startLogcat, stopLogcat } from "../../services/logcat.js";
+import { swipeAndroidApp } from "../../services/app_swiper.js";
 export default class DeepLinkNotificationClick extends BaseTest {
   constructor() {
     super("DeepLinkNotificationClick", "Verifying DeepLink Click notification");
@@ -11,14 +14,32 @@ export default class DeepLinkNotificationClick extends BaseTest {
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
 
     this.eventEmitter.log(`execute DeepLinkNotificationClick: driver: ${JSON.stringify(driver)}`)
-    let nativeDriver = await NativeDriverHolder.getInstance()
 
+    // await NativeDriverHolder.destroy();
+    let nativeDriver = await NativeDriverHolder.getInstance()
+    await nativeDriver.execute('mobile: activateApp', {'appId': 'com.anagog.jema.flutter2.sampleapp'});
+
+    const element =  byValueKey('Application Title');
+    this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
+    const viewExists = element != null
+    
     this.eventEmitter.log(`nativeDriver: ${JSON.stringify(nativeDriver)}`)
     try {
       let testStatus = TestStatus.PASS;
-      await this.openAndClickNotification(nativeDriver);
-      await driver.pause(1000);
 
+      stopLogcat();
+      clearLogcat();
+      
+      await swipeAndroidApp(nativeDriver)
+      
+      await driver.pause(2000)   
+      await this.openAndClickNotification(nativeDriver);
+      await NativeDriverHolder.destroy()    
+      nativeDriver = await NativeDriverHolder.getInstance()
+      let appPackage = await nativeDriver.getCurrentPackage()
+      startLogcat(appPackage)
+
+      await driver.pause(2000);
       const deepLinkLog = "About to handle linkUrl: "
 
       let logs = this.logs();
@@ -76,9 +97,9 @@ export default class DeepLinkNotificationClick extends BaseTest {
 
   async openAndClickNotification(driver: WebdriverIO.Browser) {
     // Step 1: Open notification tray
-    await driver.pause(5000);
+    await driver.pause(1000);
     await driver.openNotifications();
-    await driver.pause(2000);;
+    await driver.pause(500);;
 
     // Step 2: Find the notification (wait a bit in case notifications are loading)
     const notification =  driver.$('android=new UiSelector().textContains("Test flutter https Deeplink")');  
@@ -113,6 +134,5 @@ export default class DeepLinkNotificationClick extends BaseTest {
     } catch(e) {
       this.eventEmitter.error(`Notification click error: ${e}`);
     }
-    await driver.pause(1000);
   }
 }
