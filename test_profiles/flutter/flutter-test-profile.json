@@ -114,21 +114,21 @@
     "name": "SDK EventEmitter Test",
     "description": "Test SDK EventEmitter functionality",
     "testPath": "./tests/flutter/sdk_event_emitter_test.js",
-    "enabled": false,
+    "enabled": true,
     "quit_on_fail" : true
   },
   {
     "name": "Plugin ForegroundEventEmitter Test",
     "description": "Test SDK EventEmitter functionality",
     "testPath": "./tests/flutter/plugin_event_emitter_test.js",
-    "enabled": false,
+    "enabled": true,
     "quit_on_fail" : true
   },
   {
-    "name": "Plugin BackgroundEventEmitter Test",
+    "name": "Plugin HeadlessEventEmitter Test",
     "description": "Test SDK EventEmitter functionality",
     "testPath": "./tests/flutter/plugin_headless_emitter.js",
-    "enabled": false,
+    "enabled": true,
     "quit_on_fail" : true
   },
   {

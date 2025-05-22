@@ -13,9 +13,8 @@ export default class SdkBackgroundWakeupTest extends BaseTest {
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     this.eventEmitter.log("Reports Test");
-
+    const duration = 5 * 60 * 1000; //5 Minutes for SDK start in background
     const start = Date.now();
-    const duration = 5 * 60 * 1000;
 
     try {
          let nativeDriver = await NativeDriverHolder.getInstance()
@@ -23,30 +22,28 @@ export default class SdkBackgroundWakeupTest extends BaseTest {
 
          const appPackage = await nativeDriver.getCurrentPackage();
 
-      stopLogcat();
-      clearLogcat();
+        stopLogcat();
+        clearLogcat();
 
-      await swipeAndroidApp(nativeDriver)
+        await swipeAndroidApp(nativeDriver)
 
-      await driver.pause(2000)
+        await driver.pause(2000)
 
       
 
-      while (Date.now() - start < duration) {
-        console.log("⏳ Running iteration at", new Date().toISOString());
-  
+      while (Date.now() - start < duration) {  
         try {
+          this.eventEmitter.log(`Waiting for SDK to start in background ${Math.floor(((Date.now() - start)/1000))} Sec`)
           const pid = execSync(`adb shell pidof -s ${appPackage}`).toString().trim()
-          this.eventEmitter.log(`Waiting for process to reopen: pid: ${pid}`)
-
           if(pid !== null){
             startLogcat(appPackage);
             break;
           }
           await nativeDriver.pause(1500); // wait 1 second between iterations
           await driver.pause(1500);
-
         } catch(e){
+          await nativeDriver.pause(1500); // wait 1 second between iterations
+          await driver.pause(1500);
         }
       }
 
