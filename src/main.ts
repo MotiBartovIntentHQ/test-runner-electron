@@ -18,7 +18,8 @@ const createWindow = () => {
     },
   });
   win.loadFile("renderer/index.html");
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
+
 };
 
 app.whenReady().then(() => {
@@ -50,17 +51,7 @@ ipcMain.handle("run-tests", async (_event, profilePath, apkPath) => {
           _event.sender.send("process-update", line)
           //console.warn("❗Invalid JSON from child:", line);
         }
-      }
-
-      // console.log("stdHandler: " + data)
-      // try{
-      //   const message = JSON.parse(data);
-      //   output += data;
-      //   _event.sender.send("process-update", message);
-      // } catch {
-      //   _event.sender.send("process-update", data);
-      // }
-     // output += data.toString();
+      }    
      
     });
 
@@ -72,6 +63,44 @@ ipcMain.handle("run-tests", async (_event, profilePath, apkPath) => {
       resolve(output);
     });
   });
+});
+
+
+ipcMain.handle("start-appium", async (_event) => {
+
+  return new Promise((resolve) => {
+    let output = "";
+    let buffer = "";
+
+    const appium = spawn("appium");
+
+    appium.stdout.on("data", (chunk) => {
+
+      buffer += chunk.toString();
+
+      let lines = chunk.toString().split("\\n");
+      for (const line of lines) {
+        try {
+          const message = JSON.parse(line);
+          _event.sender.send("appium-updates", message);
+        } catch {
+          _event.sender.send("appium-updates", line)
+        }
+      }
+    })
+  
+    appium.stderr.on("data" , (data) => {
+      console.error(`appium error: ${data}`)
+      output += "❌ " + data.toString();
+
+    } )
+
+    appium.on("exit", () => {
+      resolve(output);
+    });
+  });
+  
+  
 });
 
 ipcMain.handle("open-file-dialog", async () => {

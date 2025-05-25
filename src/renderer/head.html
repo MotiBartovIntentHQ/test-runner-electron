@@ -17,17 +17,26 @@
         .top {          
           margin: 0;
           padding: 0;
-          padding: 10px;      
+          padding: 10px;   
+          flex: 1;   
         }
 
         .bottom {
-          flex: 1;
+          flex: 3;
           margin: 0;
           padding: 0;
         }
 
         .container{
           display: flex;
+          height: 400px;
+        }
+        
+        .terminal{      
+          height: 180px;
+          background-color: #d7d3b6;    
+          border-bottom-right-radius: 10px;
+          border-bottom-left-radius: 10px;   
         }
 
         .left-pane {
@@ -35,7 +44,6 @@
           background-color: #f2f2f2;
           border-right: 2px solid #ccc;
           border: 2px inset #ccc;
-          border-bottom-left-radius: 10px;
           border-top-left-radius: 10px;
           box-sizing: border-box;
           overflow: hidden; 
@@ -48,7 +56,6 @@
           font-family: monospace;
           overflow-y: auto;
           box-sizing: border-box;
-          border-bottom-right-radius: 10px;
           border-top-right-radius: 10px;
         }
     

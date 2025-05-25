@@ -33,6 +33,14 @@ contextBridge.exposeInMainWorld("electronApi", {
         };
         input.click();
       });
+    },
+
+    appiumUpdates: (callback: (msg: string) => void) => {
+      ipcRenderer.on("appium-updates", (_event: any, msg: any) => callback(msg));
+    } ,
+    
+    startAppium: () => {
+      ipcRenderer.invoke("start-appium")    
     }
   });
 
