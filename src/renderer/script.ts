@@ -164,7 +164,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     clearTestsList();
     clearConsole()
     statusIndicator.style.backgroundColor = "#e4cb12";
-    statusIndicatorText.textContent = "Running ⏳"
+    statusIndicatorText.textContent = "RUNNING ⏳"
     testing = true;
     updateButtonState()
   }
