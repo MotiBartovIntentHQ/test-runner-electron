@@ -1,24 +1,22 @@
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import * as fs from "fs";
 
-export default class ConfigDownloadTest extends BaseTest {
+export default class SdkInitialState extends BaseTest {
   constructor() {
-    super("ConfigDownloadTest", "Verifying remote config download successfully");
+    super("SdkInitialState", "Verify SDK disabled at startup");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    this.eventEmitter.log(`Execute Config Download Test`);
+    this.eventEmitter.log("Execute SdkInitialState test");
 
     try {
 
       const logs = this.logs();
       let testStatus = TestStatus.PASS;
       
-      if(!logs.includes("Successfully downloaded config from server")){
+      if(!logs.includes("DISABLED") || logs.includes("SUSPENED")){
         testStatus = TestStatus.FAIL;
-        this.eventEmitter.log(`Failed to download config from server`);
-      } else {
-        this.eventEmitter.log(`Successfully downloaded config from server`);
       }
 
       return {

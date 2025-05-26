@@ -1,5 +1,5 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import * as fs from "fs";
 
 export default class OnboardingTest extends BaseTest {
@@ -12,19 +12,13 @@ export default class OnboardingTest extends BaseTest {
     this.eventEmitter.log("OnBoarding Test");
 
     try {
-      const currentDir = process.cwd();
-
-      
       await this.startOnboardingFromMenu(driver);
       await driver.pause(5000);
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
-
-     
-
+      const logs = this.logs();
       let status = TestStatus.PASS;
       const expectedLogIndicator = "DuringOnboarding"; // or the exact phrase to match
 
-if (!logs.includes(expectedLogIndicator)) {
+  if (!logs.includes(expectedLogIndicator)) {
   status = TestStatus.FAIL;
   return {
     test: this.name,
@@ -35,7 +29,6 @@ if (!logs.includes(expectedLogIndicator)) {
 } else {
   this.eventEmitter.log(`✅ Found onboarding status change: "${expectedLogIndicator}"`);
 }
-
       return {
         test: this.name,
         description: this.description,

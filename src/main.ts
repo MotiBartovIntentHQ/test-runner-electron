@@ -81,6 +81,8 @@ ipcMain.handle("start-appium", async (_event) => {
       console.error(`appium error: ${data}`)
       output += "❌ " + data.toString();
 
+      _event.sender.send("appium-updates", "❌ " + data.toString())
+
     } )
 
     appium.on("exit", () => {
