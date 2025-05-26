@@ -1,5 +1,5 @@
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import { EventEmitterImpl } from "../services/event_emitter.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { EventEmitterImpl } from "../../services/event_emitter.js";
 
 export default class InstallAndRun extends BaseTest {
   constructor() {

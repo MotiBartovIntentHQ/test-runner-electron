@@ -1,5 +1,5 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
 export default class ManifestDownloadTest extends BaseTest {
   constructor() {
