@@ -81,7 +81,7 @@ const apkPath = process.argv[3];
           const testInstance: BaseTest = new TestClass();
   
           // 🔹 Execute the test
-          const result = await testInstance.execute(driver); //Running the test!!
+          const result = await testInstance.execute(driver);
           results.push(result);
           eventEmitter.formattedLog(`${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥 ${result.error}` }`) ;
           eventEmitter.testStop(  index, result.status);
