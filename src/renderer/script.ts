@@ -197,10 +197,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
   
 
-  (window as any).electronApi.appiumUpdates((msg: any) => {
-    terminal.textContent += msg;
+  (window as any).electronApi.appiumUpdates((msg: any) => {  
+    terminal.innerHTML += msg;
     terminal.scrollTop = terminal.scrollHeight;
-
   });
   
   startAppium(window);

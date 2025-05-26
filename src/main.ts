@@ -18,7 +18,7 @@ const createWindow = () => {
     },
   });
   win.loadFile("renderer/index.html");
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
 
 };
 
@@ -70,23 +70,11 @@ ipcMain.handle("start-appium", async (_event) => {
 
   return new Promise((resolve) => {
     let output = "";
-    let buffer = "";
 
     const appium = spawn("appium");
 
     appium.stdout.on("data", (chunk) => {
-
-      buffer += chunk.toString();
-
-      let lines = chunk.toString().split("\\n");
-      for (const line of lines) {
-        try {
-          const message = JSON.parse(line);
-          _event.sender.send("appium-updates", message);
-        } catch {
-          _event.sender.send("appium-updates", line)
-        }
-      }
+      _event.sender.send("appium-updates", chunk)
     })
   
     appium.stderr.on("data" , (data) => {
@@ -107,3 +95,4 @@ ipcMain.handle("open-file-dialog", async () => {
   const result = await dialog.showOpenDialog({ properties: ["openFile"] });
   return result.filePaths;
 });
+
