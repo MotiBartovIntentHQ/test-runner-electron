@@ -23,7 +23,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const consoleOutput = document.getElementById("consoleOutput")!;
   const statusIndicator = document.getElementById("test-stauts-container") as HTMLInputElement;
   const statusIndicatorText = document.getElementById("test-status-continer-text") as HTMLInputElement;
-  const terminal = document.getElementById("terminal") as HTMLInputElement;
+  const appiumTerminal = document.getElementById("appiumTerminal") as HTMLInputElement;
 
   let profilePath = "";
   let apkPath = "";
@@ -171,7 +171,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   function startAppium(window : any){
     (window as any).electronApi.startAppium((msg : any) => {
-      terminal.textContent += msg;
+      appiumTerminal.textContent += msg;
     });
   }
 
@@ -198,8 +198,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   
 
   (window as any).electronApi.appiumUpdates((msg: any) => {  
-    terminal.innerHTML += msg;
-    terminal.scrollTop = terminal.scrollHeight;
+    appiumTerminal.innerHTML += msg;
+    appiumTerminal.scrollTop = appiumTerminal.scrollHeight;
   });
   
   startAppium(window);
