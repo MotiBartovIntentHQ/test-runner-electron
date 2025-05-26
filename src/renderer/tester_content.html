@@ -1,48 +1,53 @@
 <content>
-    <h2>🧪 Edge Sdk Automation Test Stand</h2>
-  <div class="content_wrapper">
-    <div class="top"> 
-      <div style="display: flex;">
-        <div style="width: 60%;">
-          <div>
-            <!-- <label for="profileInput" class="file-label">📂 Choose Test Profile</label> -->
-            <button id="profileInput">📂 Choose Test Profile</button>
-            <label class="file-label"> | </label>
-            <label id="profileFileName"></label>
-          </div><br>
-          <div>
-            <button id="apkInput">📱 Choose Test Apk</button>
-            <label class="file-label"> | </label>
-            <label id="apkFileName"></label>
-          </div><br>
-          <button id="runBtn" disabled>Run Tests</button>
-        </div>
-        <div id="test-stauts-container" class="test-status-container">
-          <div id="test-status-continer-text" class="test-status-continer-text"></div>
-        </div>
-      </div>
-      
+  
+  <div class="container">
+    <div class="top-pane">
+            <div class="test-controls-wrapper">
+                <div class="choose-file-container">
+                    <button id="profileInput">📂 Choose Test Profile</button>
+                    <label class="file-label"> | </label>
+                    <label id="profileFileName"></label>
+                </div>
+                <div class="choose-file-container">
+                    <button id="apkInput">📱 Choose Test Apk</button>
+                    <label class="file-label"> | </label>
+                    <label id="apkFileName"></label>                      
+                </div>
+                <div class="choose-file-container">
+                    <button id="runBtn">Run Tests</button>
+                </div>
+            <div>            
+          </div>
+        </div>            
+        <div class="test-status-wrapper">
+            <div id="test-stauts-container" class="test-status-container">
+              <div id="test-status-continer-text" style="justify-content: center; align-items: center;"></div>
+            </div>            
+        </div>               
     </div>
-    <div class="bottom">
-      <div class="container">
-        <div class="left-pane">
-            <div style="color: #000;">
-              <ul id="testsList">
-              </ul>
-            </div>
-        </div>
-        <div class="right-pane">
-            <pre id="consoleOutput" style="background:#111;
-                                           color:#0f0;
-                                           padding-left:10px;
-                                           padding-right: 10px;
-                                           height: 70vh;
-                                           overflow:auto;
-                                           overflow-y: auto;"></pre>
-        </div>
+
+    <div class="middle-pane">
+      <div class="left-middle-pane-wrapper">
+        <ul id="testsList">
+                <!-- <li class="list-item"><div>Manifest Download</div><div>✅</div></li> -->
+        </ul>
       </div>
+      <div class="main-console-wrapper">
+       <pre id="consoleOutput" style="background:#111;
+                                           color:#0f0;  
+                                           padding: 8px;                                  
+                                           margin: 0;
+                                           display: flex;
+                                           border: 2px inset #ccc;    
+                                           box-sizing: border-box;
+                                           overflow-y: auto;
+                                           flex: 1;"></pre>
+      </div>
+    </div>
+
+    <div class="bottom-pane">
+        <pre class="terminal" id="appiumTerminal"></pre>
     </div>
   </div>
-
 
 </content>

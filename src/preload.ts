@@ -1,5 +1,14 @@
 const fs = require("fs");
 const { contextBridge, ipcRenderer } = require( "electron");
+import AnsiToHtml from 'ansi-to-html';
+
+
+const ansiToHtml = new AnsiToHtml({ newline: true });
+
+const stripAnsiCodes = (byteArray: Uint8Array) => {
+  const text = new TextDecoder().decode(byteArray);
+  return ansiToHtml.toHtml(text);
+}
 
 contextBridge.exposeInMainWorld("electronApi", {
     runTests: (profilePath: string, apkPath: string) =>
@@ -33,7 +42,17 @@ contextBridge.exposeInMainWorld("electronApi", {
         };
         input.click();
       });
+    },
+
+    appiumUpdates: (callback: (msg: string) => void) => {
+      ipcRenderer.on("appium-updates", (_event: any, msg: any) => callback(stripAnsiCodes(msg)));
+    } ,
+    
+    startAppium: () => {
+      ipcRenderer.invoke("start-appium")    
     }
+    
   });
 
+  
 

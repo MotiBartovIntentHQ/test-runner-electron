@@ -7,6 +7,7 @@
 //   updateButtonState();
 // };
 
+
 window.addEventListener("DOMContentLoaded", async () => {
   await loadPartial("head", "./head.html")
   await loadPartial("content", "./tester_content.html");
@@ -22,6 +23,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const consoleOutput = document.getElementById("consoleOutput")!;
   const statusIndicator = document.getElementById("test-stauts-container") as HTMLInputElement;
   const statusIndicatorText = document.getElementById("test-status-continer-text") as HTMLInputElement;
+  const appiumTerminal = document.getElementById("appiumTerminal") as HTMLInputElement;
 
   let profilePath = "";
   let apkPath = "";
@@ -90,7 +92,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       icon.classList.add("icon");
       icon.textContent = ""; // You can also use an SVG or emoji
 
-// Append the text and the icon into the <li>
+ // Append the text and the icon into the <li>
       li.appendChild(textNode);
       li.appendChild(icon);  
       li.addEventListener("click", () => {
@@ -162,9 +164,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     clearTestsList();
     clearConsole()
     statusIndicator.style.backgroundColor = "#e4cb12";
-    statusIndicatorText.textContent = "Running ⏳"
+    statusIndicatorText.textContent = "RUNNING ⏳"
     testing = true;
     updateButtonState()
+  }
+
+  function startAppium(window : any){
+    (window as any).electronApi.startAppium((msg : any) => {
+      appiumTerminal.textContent += msg;
+    });
   }
 
   (window as any).electronApi.onProcessUpdate((msg: any) => {
@@ -188,6 +196,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
   });
   
+
+  (window as any).electronApi.appiumUpdates((msg: any) => {  
+    appiumTerminal.innerHTML += msg;
+    appiumTerminal.scrollTop = appiumTerminal.scrollHeight;
+  });
+  
+  startAppium(window);
 });
 
 async function loadPartial(id: string, file: string) {
@@ -200,6 +215,7 @@ async function loadPartial(id: string, file: string) {
 function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 
 
 
