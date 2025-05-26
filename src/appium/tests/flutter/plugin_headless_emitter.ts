@@ -1,55 +1,57 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
-export default class SnapshotReportTest extends BaseTest {
+export default class FlutterHeadlessEventEmitter extends BaseTest {
   constructor() {
-    super("SnapshotReportTest", "Generate Snapshot Report Test");
+    super("FlutterHeadlessEventEmitter", "Flutter headless BackgroundEventEmitter test");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    this.eventEmitter.log("Reports Test");
+    this.eventEmitter.log("FlutterPluginEventEmitter test");
 
     try {
-      await driver.pause(10000);
       const logs = this.logs();
       
       let status = TestStatus.PASS;
-      if(!logs.includes("about to generate report: factoryName: MicrosegmentsSnapshot")){
+    
+      const backgroundEmitterOnCampaignTriggered = "BackgroundEventEmitter 2 main INFO onNewMessage: com.anagog.jedai.anagog_api.model.Message$OnCampaignTriggered";
+
+      if(!logs.includes(backgroundEmitterOnCampaignTriggered) ){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Failed to find generate microsegments snapshot report logs",
+          error: "Unable to find Plugin BackgroundEventEmitter events prompts",
         };
       }
 
-      if(!logs.includes("About to generate report: [MicrosegmentsSnapshot]") || !logs.includes("output snapshot size")){
+      const internalMethodChannel = "[INTERNAL_METHOD_CHANNEL] onMessageCall: PluginInternalMessage#eventEmitterMessage";
+      const internalMethodChannelEventEmitterMessage = "[INTERNAL_METHOD_CHANNEL]: sdkEventEmitterMessage: {campaign_identifier:";
+  
+      if(!logs.includes(internalMethodChannel) || !logs.includes(internalMethodChannelEventEmitterMessage)){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Unable to find Microsegment snapshot generate report",
+          error: "Unable to find Plugin internalMethodChannel events prompts",
         };
       }
-      
-      const regex = /Snapshot report file ready: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
 
-      const matchResult = regex.test(logs);
-      this.eventEmitter.log(`Microsegment snapshot report match ${matchResult}`)
-      //console.log(`Microsegment report match: ${matchResult}`)
+      const headlessCallbackCampaignTrigger = "[anagogHeadlessCallback] ON_CAMPAIGN_TRIGGERED";
 
-      if(!matchResult){
+      if(!logs.includes(headlessCallbackCampaignTrigger) ){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Failed to find generate microsegments snapshot report file",
+          error: "Unable to find headlessCallbackCampaignTrigger events prompts",
         };
       }
+
 
       return {
         test: this.name,

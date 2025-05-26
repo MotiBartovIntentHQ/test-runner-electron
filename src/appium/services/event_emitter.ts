@@ -1,8 +1,11 @@
 import { stat } from "fs"
+import { formatMessage } from "./utils"
 
 export interface EventEmitter {
+    formattedLog(message: string): void
      log(message: string) : void
      error(message: string) : void
+     formattedError(message: string) : void
      testResult(status: string): void
      start() : void
      testStart(index: number) : void
@@ -21,12 +24,20 @@ export class EventEmitterImpl implements EventEmitter {
         return EventEmitterImpl.instance;
     }
 
+    formattedLog(message: string) : void {
+        this.log(formatMessage(message))
+    }
+
     log(message: string): void {
         this.emit({type: "log", content: message})
     }
 
     error(message: string): void {
         this.emit({type: "error", content: message})
+    }
+
+    formattedError(message: string): void {
+        this.error(formatMessage(message))
     }
 
     start(): void {
@@ -46,7 +57,7 @@ export class EventEmitterImpl implements EventEmitter {
     }
 
     emit(message: object) {
-        process.stdout.write(JSON.stringify(message) + "\\n");
+        process.stdout.write(`${JSON.stringify(message)}\\n`);
     }
 }
 

@@ -1,5 +1,7 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import * as fs from "fs";
+import {byValueKey} from "appium-flutter-finder";
 
 export default class GenerateReportsTest extends BaseTest {
   constructor() {
@@ -11,12 +13,23 @@ export default class GenerateReportsTest extends BaseTest {
     this.eventEmitter.log("Reports Test");
 
     try {
-
-      await this.forceSendPeriodicReport(driver);
+      
+      await this.scrollToButton(driver);
       await driver.pause(15000);
-      const logs  = this.logs();
-
+      const logs = this.logs();
       let status = TestStatus.PASS;
+
+
+    if(!logs.includes("onMethodCall: method: forceScheduleReports")){
+      status = TestStatus.FAIL
+      return {
+      test: this.name,
+       description: this.description,
+       status: status,
+        error: "Unable to file plugin forceScheduleReports method call",
+      };
+    }
+
 
       if(!logs.includes("about to generate report: factoryName: JemaCampaignReportFactory")){
         status = TestStatus.FAIL
@@ -107,7 +120,6 @@ export default class GenerateReportsTest extends BaseTest {
           error: "Failed to generate Stats",
         };
       }
-      
 
       return {
         test: this.name,
@@ -125,21 +137,12 @@ export default class GenerateReportsTest extends BaseTest {
     }
   }
 
-  async forceSendPeriodicReport(driver: WebdriverIO.Browser) {
-    await this.clickThreeDots(driver)
-    const lastMenuItem = await driver.$(
-        'android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Force Send Periodic Reports"))'
-      );
-      await lastMenuItem.click(); // Click the item after scrolling
-  }
+  async scrollToButton(driver: WebdriverIO.Browser) {
+    await driver.execute('flutter:scrollIntoView', byValueKey('ScheduleReports'), {alignment: 0.1})
+    let buttonFinder = byValueKey("ScheduleReports")
 
-  async clickThreeDots(driver: WebdriverIO.Browser){
-    try {
-        const overflowMenu = await driver.$("~More options"); // Default content-desc for 3-dots menu
-        await overflowMenu.click();
-        console.log("✅ 3-Dots Overflow Menu Clicked!");
-      } catch (error) {
-        console.error("❌ Could not find Overflow Menu:", error);
-      }
+    await driver.elementClick(buttonFinder);
   }
 }
+  
+

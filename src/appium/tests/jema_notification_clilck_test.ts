@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class JemaNotifiactionClick extends BaseTest {
   constructor() {
@@ -13,8 +12,9 @@ export default class JemaNotifiactionClick extends BaseTest {
     try {
       const currentDir = process.cwd();
       const notificationClickPrompt = "Notification clicked for campaign:";
+
       const jeamOverallClicked = "about to get stat by query: JeMAEvents.overall.clicked"
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      let logs = this.logs();
       let testStatus = TestStatus.FAIL;
 
       if(logs.includes(notificationClickPrompt)){
@@ -30,7 +30,7 @@ export default class JemaNotifiactionClick extends BaseTest {
 
       await this.openAndClickNotification(driver);
 
-      logs = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      logs = this.logs();
 
       if(logs.includes("Notification clicked for campaign:") ){
         console.log("Campaign triggered successfully")

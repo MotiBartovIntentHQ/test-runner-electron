@@ -1,9 +1,9 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
-export default class SnapshotReportTest extends BaseTest {
+export default class MicrosegmentsReportsTest extends BaseTest {
   constructor() {
-    super("SnapshotReportTest", "Generate Snapshot Report Test");
+    super("MicrosegmentsReportTest", "Generate and send microsegments report");
   }
 
 
@@ -11,34 +11,34 @@ export default class SnapshotReportTest extends BaseTest {
     this.eventEmitter.log("Reports Test");
 
     try {
-      await driver.pause(10000);
       const logs = this.logs();
-      
       let status = TestStatus.PASS;
-      if(!logs.includes("about to generate report: factoryName: MicrosegmentsSnapshot")){
+      if(!logs.includes("About to generate report: StatsIReportFactory")){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Failed to find generate microsegments snapshot report logs",
+          error: "Failed to find generate microsegments report logs",
         };
       }
 
-      if(!logs.includes("About to generate report: [MicrosegmentsSnapshot]") || !logs.includes("output snapshot size")){
+    
+      if(!logs.includes("About to get stats for") || !logs.includes("Report stats gathering finished")){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Unable to find Microsegment snapshot generate report",
+          error: "Failed to find StatsReportFactory logs",
         };
       }
-      
-      const regex = /Snapshot report file ready: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
+
+
+      const regex = /Report was generated: .*\/StatsIReportFactory-[^\/]+\.gz/;
 
       const matchResult = regex.test(logs);
-      this.eventEmitter.log(`Microsegment snapshot report match ${matchResult}`)
+      this.eventEmitter.log(`Microsegment report match ${matchResult}`)
       //console.log(`Microsegment report match: ${matchResult}`)
 
       if(!matchResult){
@@ -47,7 +47,7 @@ export default class SnapshotReportTest extends BaseTest {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Failed to find generate microsegments snapshot report file",
+          error: "Failed to find generate microsegments",
         };
       }
 

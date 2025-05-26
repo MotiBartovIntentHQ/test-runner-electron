@@ -27,6 +27,34 @@
       "quit_on_fail": true
   },
   {
+    "name": "Pending APIS Test",
+    "description": "Verify pending APIs logic",
+    "testPath": "./tests/flutter/api_pending_queue.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
+    "name": "Set User Defined Stats",
+    "description": "Set User Defined Stats",
+    "testPath": "./tests/flutter/set_custom_microsegments_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Get User Defined Stats",
+    "description": "Get User Defined Stats",
+    "testPath": "./tests/flutter/get_custom_microsegments_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Page Visit",
+    "description": "Verifying PageVisit ",
+    "testPath": "./tests/flutter/page_visit.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
     "name": "Manifest Download Test",
     "description": "Verify Manifest download",
     "testPath": "./tests/manifest_download_test.js",
@@ -48,6 +76,34 @@
     "quit_on_fail": true
   },
   {
+    "name": "Fire MicroMoment",
+    "description": "Fire MicroMoment test ",
+    "testPath": "./tests/flutter/fire_micromoment_test.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
+    "name": "Generate Reports",
+    "description": "Verify Generate and Send Reports",
+    "testPath": "./tests/flutter/generate_reports_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Microsegments Reports",
+    "description": "Verify Microsegments generate and Send Reports",
+    "testPath": "./tests/flutter/microsegments_report_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
+    "name": "Snapshot Reports",
+    "description": "Verify Snapshot Report generate",
+    "testPath": "./tests/flutter/snapshot_report_test.js",
+    "enabled": true,
+    "quit_on_fail": true
+  },
+  {
     "name": "Jema Notification Click",
     "description": "Click on campaign notification and check result",
     "testPath": "./tests/flutter/jema_notification_clilck_test.js",
@@ -55,31 +111,38 @@
     "quit_on_fail": true
   },
   {
+    "name": "SDK EventEmitter Test",
+    "description": "Test SDK EventEmitter functionality",
+    "testPath": "./tests/flutter/sdk_event_emitter_test.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
+    "name": "Plugin ForegroundEventEmitter Test",
+    "description": "Test SDK EventEmitter functionality",
+    "testPath": "./tests/flutter/plugin_event_emitter_test.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
+    "name": "Plugin HeadlessEventEmitter Test",
+    "description": "Test SDK EventEmitter functionality",
+    "testPath": "./tests/flutter/plugin_headless_emitter.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
+    "name": "SDK Background Wakeup",
+    "description": "Test SDK Background wakeup test",
+    "testPath": "./tests/flutter/sdk_background_wakeup_test.js",
+    "enabled": true,
+    "quit_on_fail" : true
+  },
+  {
     "name": "DeepLink Notification Click",
     "description": "Click on campaign notification and check result",
     "testPath": "./tests/flutter/deep_link_notification_click.js",
     "enabled": true,
-    "quit_on_fail": true
-  },
-  {
-    "name": "Generate Reports",
-    "description": "Verify Generate and Send Reports",
-    "testPath": "./tests/generate_reports_test.js",
-    "enabled": false,
-    "quit_on_fail": true
-  },
-  {
-    "name": "Microsegments Reports",
-    "description": "Verify Microsegments generate and Send Reports",
-    "testPath": "./tests/microsegments_report_test.js",
-    "enabled": false,
-    "quit_on_fail": true
-  },
-  {
-    "name": "Snapshot Reports",
-    "description": "Verify Snapshot Report generate",
-    "testPath": "./tests/snapshot_report_test.js",
-    "enabled": false,
     "quit_on_fail": true
   }
 ]

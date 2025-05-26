@@ -1,53 +1,56 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
-export default class SnapshotReportTest extends BaseTest {
+export default class SdkEventEmitterTest extends BaseTest {
   constructor() {
-    super("SnapshotReportTest", "Generate Snapshot Report Test");
+    super("SdkEventEmitterTest", "SDK Event Emitter Test");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
-    this.eventEmitter.log("Reports Test");
+    this.eventEmitter.log("SdkEventEmitterTest");
 
     try {
-      await driver.pause(10000);
       const logs = this.logs();
+      const registerMessageListenerPrompt = `com.anagog.anagog_flutter.event_emitter.PluginAnagogMessageListener`
       
       let status = TestStatus.PASS;
-      if(!logs.includes("about to generate report: factoryName: MicrosegmentsSnapshot")){
+      if(!logs.includes(registerMessageListenerPrompt)){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Failed to find generate microsegments snapshot report logs",
+          error: "Unable to find register messageListener logs",
         };
       }
 
-      if(!logs.includes("About to generate report: [MicrosegmentsSnapshot]") || !logs.includes("output snapshot size")){
+      const notifySubscribersPrompt = "notifySubscribers: There are 1 subscribers"
+
+      if(!logs.includes(notifySubscribersPrompt)){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Unable to find Microsegment snapshot generate report",
+          error: "Unable to emitter notifySubscribers prompt",
         };
       }
-      
-      const regex = /Snapshot report file ready: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
+    
+      const emitSdkChanged = "emitEvent: com.anagog.jedai.anagog_api.model.Message$OnSdkStatusChanged";
+      const emitCampaignTrigger = "emitEvent: com.anagog.jedai.anagog_api.model.Message$OnCampaignTriggered";
+      const emitSnapshotReport = "emitEvent: com.anagog.jedai.anagog_api.model.Message$OnSnapshotReport"
+      const emitNotificationClicked = "emitEvent: com.anagog.jedai.anagog_api.model.Message$OnNotificationClicked"
 
-      const matchResult = regex.test(logs);
-      this.eventEmitter.log(`Microsegment snapshot report match ${matchResult}`)
       //console.log(`Microsegment report match: ${matchResult}`)
 
-      if(!matchResult){
+      if(!logs.includes(emitSdkChanged) || !logs.includes(emitCampaignTrigger) || !logs.includes(emitSnapshotReport) || !logs.includes(emitNotificationClicked)){
         status = TestStatus.FAIL
         return {
           test: this.name,
           description: this.description,
           status: status,
-          error: "Failed to find generate microsegments snapshot report file",
+          error: "Unable to find EventEmitter events prompts",
         };
       }
 

@@ -1,6 +1,5 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
-import * as fs from "fs";
 
 export default class PageVisitTest extends BaseTest {
   constructor() {
@@ -21,8 +20,9 @@ export default class PageVisitTest extends BaseTest {
       const pageLastVisitDateLog = "about to set stats in cache: PageLastVisitDate"
       const pageLastVisitLog = "about to set stats in cache: PageLastVisit"
 
-      
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const pageLastVisitLambdaLog = "about to run event[PageVisit]"
+  
+      let logs = this.logs();
       let testStatus = TestStatus.PASS;
 
 
@@ -60,6 +60,16 @@ export default class PageVisitTest extends BaseTest {
         };
       }
 
+      // if(!logs.includes(pageLastVisitLambdaLog) ){
+      //   testStatus = TestStatus.FAIL;
+      //   const error = "Unable to find PageVisit AppEvent lambda log";
+      //   return {
+      //     test: this.name,
+      //     description: this.description,
+      //     status: testStatus,
+      //     error: error,
+      //   };
+      // }
 
       return {
         test: this.name,

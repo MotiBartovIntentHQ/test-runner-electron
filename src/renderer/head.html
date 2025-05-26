@@ -1,73 +1,161 @@
 <head>
-    <meta charset="UTF-8" />
-    <title>Edge Automation Test Stand</title>
+  <meta charset="UTF-8">
+  <title>Edge Automation Test Stand</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
 
-    <style>
-        body {
-          margin: 50;
-          font-family: sans-serif;
-        }
-    
-        .container {
-          display: flex;
-          height: 70vh;
-        }
-    
-        .left-pane {
-          width: 30%;
-          background-color: #f2f2f2;
-          padding: 1rem;
-          border-right: 1px solid #ccc;
-          overflow-y: auto;
-        }
-    
-        .right-pane {
-          flex: 1;        
-          background-color: #111;
-          color: #0f0;
-          font-family: monospace;
-          overflow-y: auto;
-        }
-    
-        ul {
-          list-style: circle;    
-          height: 60vh;      
-          padding: 0.1rem;
-          background-color: #e0e0e0;
-          border: 2px inset #ccc;
-          border-radius: 4px;
-        }
-    
-        li {
-          padding: 0.5rem;
-          cursor: pointer;
-          border-bottom: 1px solid #ccc;
-        }
-    
-        li:hover {
-          background-color: #ddd;
-        }
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-        .test-status-container {
-          width: 40%;
-          display: flex;
+    .top-pane {
+      display: flex;
+      height: 20%;
+      padding: 16px;
+      margin: 8px;
+      margin-bottom: 0px;
+      box-sizing: border-box;
+      align-items: center;    /* vertical centering */
+      justify-content: center;
+    }
+
+    .top-pane-content {
+        height: 100%;
+        width: 100%; /* optional */
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        flex-direction:row;
+        justify-content: center;
+        align-items: center; /* to also center text vertically inside this div */
+    }
+
+    .middle-pane {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      margin: 8px;
+      margin-bottom: 0;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .left-middle-pane-wrapper{
+      width: 25%;
+      background-color: #f2f2f2;
+      border-right: 2px solid #ccc;
+      border: 2px inset #ccc;      
+      border-top-left-radius: 10px;
+      padding: 4px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;   
+        height: 100%;     
+        width: 100%; 
+        overflow-y: auto;
+    }
+    
+    li:hover {
+        background-color: #ddd;
+    }
+
+    .main-console-wrapper {
+      display: flex;    
+      width: 75%;
+      height: 100%;
+      background-color: #d4edda;  
+      box-sizing: border-box;      
+      overflow-y: auto;
+    }
+
+    .bottom-pane {
+      height: 25%;
+      background-color: #fff3cd;
+      padding-left: 0px;
+      padding-right: 0px;
+      box-sizing: border-box;
+      margin: 8px;
+      margin-top: 0;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .test-status-container {
+        display: flex;
           justify-content: center; /* horizontal */
           align-items: center;     /* vertical */                  
           border: 2px inset #ccc;
           border-radius: 4px;
           font-size: 50px;
-          color: #e0f7fa;
+          color: #ffffff;
+          width: 100%;
+          margin: 16px;
         }
-        .list-item {
+
+    .test-status-wrapper {
+        display: flex;
+        width: 40%;
+        height: 100%
+    }
+
+    .test-controls-wrapper{
+        display:flex; 
+        width:  60%;         
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }   
+    
+    .choose-file-container{
+        display: flex;
+        padding-left: 16px;
+        align-items: center;
+    }
+
+    .file-label{
+        display: flex;
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .list-item {
+          margin: 0;
+          padding: 0;
           display: flex; /* Allow content and icon on same line */
           justify-content: space-between; /* Push text and icon apart */
-          align-items: center; /* Center vertically */
-          padding: 5px 15px;
+          align-items: center; /* Center vertically */          
           cursor: pointer; /* Pointer cursor on hover */
+          pointer-events: none;
           border-bottom: 1px solid #ddd; /* Optional: item divider */
-        }
-        .list-item.selected {
+    }
+
+    .list-item.selected {
           background-color: #e0f7fa; /* Light blue background to simulate selection */
-        }
-      </style>
+    }
+    
+    .terminal{   
+          background-color: #d7d3b6;    
+          height: 100%;  
+          padding: 4px;           
+          margin: 0px;
+          border: 2px inset #ccc;    
+          font-weight: 700;
+          font-size: 18px;
+          padding-bottom: 0px;
+          border-bottom-right-radius: 10px;
+          border-bottom-left-radius: 10px;   
+          box-sizing: border-box;
+          overflow-y: auto;
+    }
+  </style>
 </head>

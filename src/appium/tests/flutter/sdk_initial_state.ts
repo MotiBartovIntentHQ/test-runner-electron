@@ -1,5 +1,4 @@
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import * as fs from "fs";
 
 export default class SdkInitialState extends BaseTest {
   constructor() {
@@ -11,13 +10,11 @@ export default class SdkInitialState extends BaseTest {
     this.eventEmitter.log("Execute SdkInitialState test");
 
     try {
-      const currentDir = process.cwd();
 
-      this.eventEmitter.log(`SdkInitialState - currentDir ${currentDir}`)
-      const logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      const logs = this.logs()
       let testStatus = TestStatus.PASS;
       
-      if(!logs.includes("SDK State Changed from DISABLED to RUNNING")){
+      if(!logs.includes("onSdkStateChanged: RUNNING")){
         testStatus = TestStatus.FAIL;
         return {
           test: this.name,

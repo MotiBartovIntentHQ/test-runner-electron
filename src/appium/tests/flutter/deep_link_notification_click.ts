@@ -1,40 +1,82 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import * as fs from "fs";
 import { execSync } from "child_process";
 import { remote, Browser } from "webdriverio";
-
-const nativeCaps = {
-  platformName: "Android",
-  "appium:automationName": "UiAutomator2",
-  "appium:deviceName": "emulator-5554",
-  "appium:appPackage": `com.anagog.jema.flutter2.sampleapp`,
-  "appium:appActivity": `.MainActivity`,
-  "appium:noReset": true
-};
-
-export default class JemaNotifiactionClick extends BaseTest {
+import { NativeDriverHolder } from "../../services/native_driver_holder.js";
+import { byValueKey } from "appium-flutter-finder";
+import { clearLogcat, startLogcat, stopLogcat } from "../../services/logcat.js";
+import { swipeAndroidApp } from "../../services/app_swiper.js";
+export default class DeepLinkNotificationClick extends BaseTest {
   constructor() {
-    super("NotificationClickTest", "Verifying Campaign notification");
+    super("DeepLinkNotificationClick", "Verifying DeepLink Click notification");
   }
-
-  
-
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
 
-    this.eventEmitter.log(`execute JemaNotifiactionClick: driver: ${JSON.stringify(driver)}`)
-    let nativeDriver = await createAndroidDriver(nativeCaps)
+    this.eventEmitter.log(`execute DeepLinkNotificationClick: driver: ${JSON.stringify(driver)}`)
 
+    // await NativeDriverHolder.destroy();
+    let nativeDriver = await NativeDriverHolder.getInstance()
+    await nativeDriver.execute('mobile: activateApp', {'appId': 'com.anagog.jema.flutter2.sampleapp'});
+
+    const element =  byValueKey('Application Title');
+    this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
+    const viewExists = element != null
+    
     this.eventEmitter.log(`nativeDriver: ${JSON.stringify(nativeDriver)}`)
     try {
       let testStatus = TestStatus.PASS;
+
+      stopLogcat();
+      clearLogcat();
+      
+      await swipeAndroidApp(nativeDriver)
+      
+      await driver.pause(2000)   
       await this.openAndClickNotification(nativeDriver);
-      await driver.pause(10000);
+      await NativeDriverHolder.destroy()    
+      nativeDriver = await NativeDriverHolder.getInstance()
+      let appPackage = await nativeDriver.getCurrentPackage()
+      startLogcat(appPackage)
 
-      const currentDir = process.cwd();
-      let logs: string = fs.readFileSync(`${currentDir}/logcat_dump.txt`, "utf8");
+      await driver.pause(2000);
+      const deepLinkLog = "About to handle linkUrl: "
 
+      let logs = this.logs();
+
+      if(!logs.includes(deepLinkLog)){
+        return {
+          test: this.name,
+          description: this.description,
+          status: TestStatus.FAIL,
+          error: "Unable to find deep link handle log!",
+        };
+      }
+
+      await driver.pause(1000);
+
+      const bottomNavigation =  await nativeDriver.$('android=new UiSelector().description("DebugScreenBottomNavigation")');  
+      const foundElementError = bottomNavigation.error;
+      const errorMessage = (await foundElementError)?.message
+      this.eventEmitter.log(`Found bottom navigation error message: ${errorMessage}`)
+
+      if(errorMessage?.includes("An element could not be located")){
+        return {
+          test: this.name,
+          description: this.description,
+          status: TestStatus.FAIL,
+          error: "Unable to find debug screen",
+        };
+      }
+
+      try{
+        await nativeDriver.back();
+      } catch(error){
+        //todo investigate why like this..
+        this.eventEmitter.error(`Something went wrong when trying to click back button: ${error}`)
+      }
+      
+      await driver.pause(1000);
 
       return {
         test: this.name,
@@ -47,49 +89,50 @@ export default class JemaNotifiactionClick extends BaseTest {
         test: this.name,
         description: this.description,
         status: TestStatus.FAIL,
-        error: JSON.stringify(error),
+        error: `There was an exception: ${JSON.stringify(error)}`,
       };
-    } finally {
-      if(nativeDriver){
-        await nativeDriver.deleteSession();
-      }
-    }
+    } 
   }
 
 
   async openAndClickNotification(driver: WebdriverIO.Browser) {
     // Step 1: Open notification tray
-    await driver.pause(10000);
+    await driver.pause(1000);
     await driver.openNotifications();
+    await driver.pause(500);;
 
     // Step 2: Find the notification (wait a bit in case notifications are loading)
-    const  notification = driver.$('android=new UiSelector().textContains("Test flutter https Deeplink")');  
+    const notification =  driver.$('android=new UiSelector().textContains("Test flutter https Deeplink")');  
     if(notification === null){
-      this.eventEmitter.log(`Notification not found`);
+      this.eventEmitter.log(`Notification not found \n`);
     } else {
-      this.eventEmitter.log(`Found notification`);
+      this.eventEmitter.log(`Found notification \n`);
     }
     
     await notification.longPress();
-    await driver.pause(3000);;
+    const location = await notification.getLocation();
+    const size = await notification.getSize();
 
-    await notification.click()
-    let delay = new Promise(resolve => setTimeout(resolve, 5000));
-    await delay;
-  }
-
+    try{
+      const x = location.x + size.width / 2;
+      const y = location.y + size.height / 2;
   
+      await driver.performActions([
+        {
+          type: "pointer",
+          id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x, y },
+            { type: "pointerDown", button: 0 },
+            { type: "pause", duration: 500 },
+            { type: "pointerUp", button: 0 }
+          ]
+        }
+      ]);
 
-}
-
-async function createAndroidDriver(capabilities: any) : Promise<WebdriverIO.Browser> {
-   const driver = await remote({
-        hostname: process.env.APPIUM_HOST || 'localhost',
-        port: 4723,
-        logLevel: 'info',
-        capabilities,
-      });
-      
-      return driver;
+    } catch(e) {
+      this.eventEmitter.error(`Notification click error: ${e}`);
+    }
   }
-
+}

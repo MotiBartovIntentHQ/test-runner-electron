@@ -12,6 +12,21 @@ export default class InstallAndRun extends BaseTest {
 
         const capabilities = JSON.parse(JSON.stringify(driver.capabilities));
         this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
+
+
+        const welcomeToJedAiPrompt = "Welcome to JedAI"
+        const sdkInizializationCompleted = "JedAI initialization completed"
+        const logs = this.logs();
+        
+        if(!logs.includes(welcomeToJedAiPrompt) || !logs.includes(sdkInizializationCompleted)){
+          return {
+            test: this.name,
+            description: this.description,
+            status:  TestStatus.FAIL,
+            error: "Unable to find SDK initialization prompts",
+          };
+        }
+
         const element = await driver.$("//android.widget.TextView[contains(@text, 'JedAI')]");
         this.eventEmitter.log(`element - ${JSON.stringify(element)}`)
         const viewExists = element != null

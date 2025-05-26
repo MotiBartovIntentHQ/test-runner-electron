@@ -7,6 +7,7 @@
 //   updateButtonState();
 // };
 
+
 window.addEventListener("DOMContentLoaded", async () => {
   await loadPartial("head", "./head.html")
   await loadPartial("content", "./tester_content.html");
@@ -22,9 +23,12 @@ window.addEventListener("DOMContentLoaded", async () => {
   const consoleOutput = document.getElementById("consoleOutput")!;
   const statusIndicator = document.getElementById("test-stauts-container") as HTMLInputElement;
   const statusIndicatorText = document.getElementById("test-status-continer-text") as HTMLInputElement;
+  const appiumTerminal = document.getElementById("appiumTerminal") as HTMLInputElement;
 
   let profilePath = "";
   let apkPath = "";
+
+  let testing = false;
 
   profileInput.onclick = async () => {
     consoleOutput.textContent += `🚀 addEventListener: click\n`;
@@ -54,7 +58,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   };
 
   function updateButtonState() {
-    runBtn.disabled = !(profilePath && apkPath);
+    runBtn.disabled = !(profilePath && apkPath) || testing;
   }
 
   runBtn.onclick = async () => {
@@ -88,7 +92,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       icon.classList.add("icon");
       icon.textContent = ""; // You can also use an SVG or emoji
 
-// Append the text and the icon into the <li>
+ // Append the text and the icon into the <li>
       li.appendChild(textNode);
       li.appendChild(icon);  
       li.addEventListener("click", () => {
@@ -112,24 +116,22 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
     const icon = li.querySelector<HTMLSpanElement>(".icon");
 
-    if(status === "running"){ 
-      li.classList.add("selected");
-    } else {
-      li.classList.remove("selected");
-    }
-
     if(!icon){
       return;
     } 
-
-    if(status !== "running"){
+    
+    if(status === "running"){ 
+      icon.textContent = "⏳";
+      li.classList.add("selected");
+    } else {
+      li.classList.remove("selected");
       if(status === "PASS"){
         icon.textContent = "✅";
       } else {
         icon.textContent = "❌";
       }
     } 
-  }
+    }
 
   function updateTestResult(status: string){
    if(status === "PASSED") {
@@ -139,6 +141,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     statusIndicator.style.backgroundColor = "#e20d0d";
     statusIndicatorText.textContent = "FAILED 🙁"
    }
+   testing = false;
+   updateButtonState();
   }
 
   function clearTestsList(){
@@ -160,7 +164,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     clearTestsList();
     clearConsole()
     statusIndicator.style.backgroundColor = "#e4cb12";
-    statusIndicatorText.textContent = "Running ⏳"
+    statusIndicatorText.textContent = "RUNNING ⏳"
+    testing = true;
+    updateButtonState()
+  }
+
+  function startAppium(window : any){
+    (window as any).electronApi.startAppium((msg : any) => {
+      appiumTerminal.textContent += msg;
+    });
   }
 
   (window as any).electronApi.onProcessUpdate((msg: any) => {
@@ -179,11 +191,18 @@ window.addEventListener("DOMContentLoaded", async () => {
         case "error": consoleOutput.textContent += msg.content + "\n";
       }
     } else {
-      consoleOutput.textContent += msg + "\n";
+      consoleOutput.textContent += `ProcessUpdate: ${msg}` + "\n";
     }
     consoleOutput.scrollTop = consoleOutput.scrollHeight;
   });
   
+
+  (window as any).electronApi.appiumUpdates((msg: any) => {  
+    appiumTerminal.innerHTML += msg;
+    appiumTerminal.scrollTop = appiumTerminal.scrollHeight;
+  });
+  
+  startAppium(window);
 });
 
 async function loadPartial(id: string, file: string) {
@@ -196,6 +215,7 @@ async function loadPartial(id: string, file: string) {
 function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 
 
 

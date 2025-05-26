@@ -1,39 +1,45 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
-export default class ApiPendingQueue extends BaseTest {
+export default class PageVisitTest extends BaseTest {
   constructor() {
-    super("ApiPendingQueue", "Verifying pending apis before SDK running");
+    super("PageVisitTest", "Verifying PageVisit and PageTracker");
   }
 
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     console.log("execute ApiPendingQueue");
     try {
-      const pageVisitPendingLog = "SDK not running yet, enqueue pending operation AnagogActiveImpl::enterPage";
-      const pendingSdkVersionLog = "SDK not running yet, enqueue pending operation AnagogActiveImpl::getVersion till it will start to run";
 
-      const pendingApisLog = /There are \d+ enqueued pending operation/
-      const flushPendingApis = /There are \d+ pending operation, executing them all/
+
+      const currentDir = process.cwd();
+     
+      const pageVisit = "onMethodCall: method: enterPage, arguments: {pageName=HomeScreen}";
+      const eventIdentifier = " identifier='PageVisit'";
+
+      const pageLastVisitDateLog = "about to set stats in cache: PageLastVisitDate"
+      const pageLastVisitLog = "about to set stats in cache: PageLastVisit"
+
+      const pageLastVisitLambdaLog = "about to run event[PageVisit]"
+  
       let logs = this.logs();
       let testStatus = TestStatus.PASS;
 
-      const pendingApiLogMatchResult = pendingApisLog.test(logs);
-
-      if(!pageVisitPendingLog){
+      if(!logs.includes(pageLastVisitDateLog)){
         testStatus = TestStatus.FAIL;
-        console.log("Unable to find PageVisit pending api")
+        const error = "Unable to find PageLastVisitDate log"
         return {
           test: this.name,
           description: this.description,
           status: testStatus,
-          error: "Unable to find PageVisit pending api",
+          error: error,
         };
       }
 
-      if(!pendingSdkVersionLog){
+      if(!logs.includes(pageLastVisitLog)){
         testStatus = TestStatus.FAIL;
-        console.log("Unable to find SDK Version pending api")
+        const error = "Unable to find PageLastVisit log"
+
         return {
           test: this.name,
           description: this.description,
@@ -42,30 +48,27 @@ export default class ApiPendingQueue extends BaseTest {
         };
       }
 
-      if(!pendingApiLogMatchResult){
+      if(!logs.includes(pageVisit) || !logs.includes(eventIdentifier)){
         testStatus = TestStatus.FAIL;
-        console.log("Unable to find pending apis logs!, there should be at least 5")
+        const error = "Unable to find PageVisit app event";
         return {
           test: this.name,
           description: this.description,
           status: testStatus,
-          error: "Unable to find pending apis logs!, there should be at least 5",
+          error: error,
         };
       }
 
-
-      const pendingApiFlushMatchResult = flushPendingApis.test(logs);
-
-      if(!pendingApiFlushMatchResult){
-        testStatus = TestStatus.FAIL;
-        console.log("Unable to find execute of pending apis logs!")
-        return {
-          test: this.name,
-          description: this.description,
-          status: testStatus,
-          error: "Unable to find execute of pending apis logs!",
-        };
-      }
+      // if(!logs.includes(pageLastVisitLambdaLog) ){
+      //   testStatus = TestStatus.FAIL;
+      //   const error = "Unable to find PageVisit AppEvent lambda log";
+      //   return {
+      //     test: this.name,
+      //     description: this.description,
+      //     status: testStatus,
+      //     error: error,
+      //   };
+      // }
 
       return {
         test: this.name,

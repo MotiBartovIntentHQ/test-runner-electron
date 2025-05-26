@@ -1,5 +1,5 @@
 import { log } from "console";
-import { BaseTest, TestResult, TestStatus } from "../core/base_test.js";
+import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
 export default class ApiPendingQueue extends BaseTest {
   constructor() {
@@ -10,8 +10,7 @@ export default class ApiPendingQueue extends BaseTest {
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     console.log("execute ApiPendingQueue");
     try {
-      const pageVisitPendingLog = "SDK not running yet, enqueue pending operation AnagogActiveImpl::enterPage";
-      const pendingSdkVersionLog = "SDK not running yet, enqueue pending operation AnagogActiveImpl::getVersion till it will start to run";
+      const updateConfigPendingOperation = "SDK not running yet, enqueue pending operation JedaiSdkStarterImpl::updateConfigIfRequired";
 
       const pendingApisLog = /There are \d+ enqueued pending operation/
       const flushPendingApis = /There are \d+ pending operation, executing them all/
@@ -20,7 +19,7 @@ export default class ApiPendingQueue extends BaseTest {
 
       const pendingApiLogMatchResult = pendingApisLog.test(logs);
 
-      if(!pageVisitPendingLog){
+      if(!updateConfigPendingOperation){
         testStatus = TestStatus.FAIL;
         console.log("Unable to find PageVisit pending api")
         return {
@@ -28,17 +27,6 @@ export default class ApiPendingQueue extends BaseTest {
           description: this.description,
           status: testStatus,
           error: "Unable to find PageVisit pending api",
-        };
-      }
-
-      if(!pendingSdkVersionLog){
-        testStatus = TestStatus.FAIL;
-        console.log("Unable to find SDK Version pending api")
-        return {
-          test: this.name,
-          description: this.description,
-          status: testStatus,
-          error: "Unable to find SDK Version pending api",
         };
       }
 

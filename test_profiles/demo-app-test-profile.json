@@ -3,7 +3,7 @@
   "package_name": "com.anagog.jedai.jedaidemo",
   "activity_name" : "MainActivity",
   "automation_name": "UiAutomator2",
-  "quit_on_fail" : true,
+  "quit_on_fail" : false,
   "tests": [
     {
       "name": "Setup and Run",
@@ -24,7 +24,7 @@
         "description": "Starting SDK from menu",
         "testPath": "./tests/start_sdk_test.js",
         "enabled": true,
-        "quit_on_fail" : true
+        "quit_on_fail" : false
     },
     {
       "name": "Config Download Test",
@@ -100,6 +100,13 @@
       "name": "Snapshot Reports",
       "description": "Verify Snapshot Report generate",
       "testPath": "./tests/snapshot_report_test.js",
+      "enabled": true,
+      "quit_on_fail" : true
+    },
+    {
+      "name": "SDK EventEmitter Test",
+      "description": "Test SDK EventEmitter functionality",
+      "testPath": "./tests/sdk_event_emitter_test.js",
       "enabled": true,
       "quit_on_fail" : true
     }

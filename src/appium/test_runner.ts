@@ -9,6 +9,7 @@ import {startLogcat, stopLogcat} from '../appium/services/logcat.js';
 import {ProfileManagerImpl as profileManager} from "./core/profile-manager/profile-manager.js";
 import { EventEmitterImpl } from "./services/event_emitter.js";
 import { emit } from "process";
+import { formatMessage } from "./services/utils.js";
 // 🔹 Set up CSV Writer
 
 const eventEmitter = EventEmitterImpl.getInstance();
@@ -44,7 +45,7 @@ const apkPath = process.argv[3];
     try {
       // 🔹 Connect to Appium
       eventEmitter.start();
-      eventEmitter.log("🚀 ------------------------ Starting Appium tests - initializing ---------------------------")
+      eventEmitter.log(formatMessage("🚀Starting Appium tests - initializing"))
       let pManager = profileManager.getInstance()
       pManager.init(process.argv[2]);
       let testProfile = (await pManager.readTestProfile());
@@ -59,7 +60,8 @@ const apkPath = process.argv[3];
         'appium:automationName': `${testProfile.automation_name}`,
         'appium:autoGrantPermissions': true, // Automatically grants permissions
         'appium:noReset': false, // Ensures app is reinstalled every test run
-        'appium:fullReset': true
+        'appium:fullReset': true,
+        'appium:newCommandTimeout': 300
       };
 
       driver = await setupDriver(capabilities)
@@ -69,28 +71,27 @@ const apkPath = process.argv[3];
         for(let index = 0; index < testCases.length; index++) {
 
         const testInfo = testCases[index];
-        eventEmitter.log(`--------------------------🔹 Running ${testInfo.name} test ------------------------`)
+        eventEmitter.formattedLog(`🔹 Running ${testInfo.name} test`)
         eventEmitter.testStart(index)
         try {
           // 🔹 Dynamically import the test class
           const TestModule = await import(testInfo.testPath);
           const TestClass = TestModule.default || TestModule[testInfo.name];
-          console.log(`🔹 Running test class ${TestClass.name}`);
 
           const testInstance: BaseTest = new TestClass();
   
           // 🔹 Execute the test
           const result = await testInstance.execute(driver);
           results.push(result);
-          eventEmitter.log(`------------- ${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥 ${result.error}` } ----------------`);
+          eventEmitter.formattedLog(`${TestClass.name} ${result.status === TestStatus.PASS ? `PASSED ✅` : `FAILED!! 🟥 ${result.error}` }`) ;
           eventEmitter.testStop(  index, result.status);
           if(result.status === TestStatus.FAIL && (testProfile.quit_on_fail || testInfo.quit_on_fail)){
             break;
           }
 
         } catch (error: any) {
-          eventEmitter.error(`-------------------- ❌ Error loading or executing ${testInfo.name}------------------------`);
-          eventEmitter.error(`-------------------------------- ❌ ${error.message}: ------------------------ ${__dirname}`);
+          eventEmitter.formattedError(`❌ Error loading or executing ${testInfo.name}` );
+          eventEmitter.formattedError(`❌ ${error.message}`);
           eventEmitter.testStop( index, TestStatus.FAIL);
           results.push({
             test: testInfo.name,
@@ -104,24 +105,28 @@ const apkPath = process.argv[3];
           }
         }
       }
-      eventEmitter.log( `🚀 -------------------------------------------- Appium tests finished -----------------------------------------`);    
+      eventEmitter.formattedLog(`🚀 Appium tests finished`);    
     } catch (error) {
-      eventEmitter.error( `❌ Test failed ${JSON.stringify(error)}`);
+      eventEmitter.formattedError( `❌ Test failed ${JSON.stringify(error)}`);
       eventEmitter.testResult(`FAILED`);
     } finally {
       if (driver) {
-        await driver.deleteSession();
+        try{
+          await driver.deleteSession();
+        } catch (e) {
+          eventEmitter.error( `🎯 Failed to delete driver session: ${e}`);    
+        }
         eventEmitter.log( `🎯 Test completed!`);    
       }
     }
 
     const hasFailed  = results.some(result => result.status === TestStatus.FAIL) || results.length === 0;
 
-    eventEmitter.log(`🚀 -------------- Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`} --------------`);    
-    eventEmitter.testResult(hasFailed ? `FAILED` : `PASSED`);
+    eventEmitter.formattedLog( `🚀 Appium tests finished with status - ${hasFailed ? `FAILED!! 🟥` : `PASSED ✅`}`) ;    
     stopLogcat();
     await csv.writeRecords(results);
-    eventEmitter.log(`📊 Test report saved: ${resultsPath}`);    
+    eventEmitter.log(`📊 Test report saved: ${resultsPath}`);   
+    eventEmitter.testResult(hasFailed ? `FAILED` : `PASSED`); 
   })();
 
 
