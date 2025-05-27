@@ -18,13 +18,13 @@ export abstract class BaseTest {
     eventEmitter : EventEmitter = EventEmitterImpl.getInstance();
     name: string;
     description: string;
-    protected deviceLogAdater? : DeviceLogAdapter;
+    protected deviceLogAdapter : DeviceLogAdapter;
     protected currentDir = process.cwd();
 
-    constructor({name, description, logAdapter} : {name: string, description: string, logAdapter?: DeviceLogAdapter}) {
+    constructor({name, description, logAdapter} : {name: string, description: string, logAdapter: DeviceLogAdapter}) {
       this.name = name;
       this.description = description;
-      this.deviceLogAdater = logAdapter;
+      this.deviceLogAdapter = logAdapter;
     }
 
 
@@ -33,7 +33,7 @@ export abstract class BaseTest {
     }
 
     protected async logs() : Promise<string> {
-      return this.deviceLogAdater ? await this.deviceLogAdater.readLog() : ""
+      return await this.deviceLogAdapter.readLog();
     }
   
     abstract execute(driver: WebdriverIO.Browser): Promise<TestResult>;
