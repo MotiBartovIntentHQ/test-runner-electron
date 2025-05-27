@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class ApiPendingQueue extends BaseTest {
-  constructor() {
-    super("ApiPendingQueue", "Verifying pending apis before SDK running");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "ApiPendingQueue",
+       description: "Verifying pending apis before SDK running", 
+       logAdapter: logAdapter});
   }
 
 
@@ -15,7 +18,7 @@ export default class ApiPendingQueue extends BaseTest {
 
       const pendingApisLog = /There are \d+ enqueued pending operation/
       const flushPendingApis = /There are \d+ pending operation, executing them all/
-      let logs = this.logs();
+      let logs = await this.logs();
       let testStatus = TestStatus.PASS;
 
       const pendingApiLogMatchResult = pendingApisLog.test(logs);

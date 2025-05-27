@@ -14,8 +14,6 @@ let logStream : WriteStream
 // ✅ Start the ADB logcat process
 let logcatProcess : ChildProcessByStdio<null, Stream.Readable, Stream.Readable>;
 
-console.log(`🚀 Logcat collected at ${logFilePath}`);
-
 // ✅ Write logcat output to file and console
 
 // ✅ Handle process exit and cleanup

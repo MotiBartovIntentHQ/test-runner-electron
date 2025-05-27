@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class GenerateReportsTest extends BaseTest {
-  constructor() {
-    super("ReportsTest", "Generate and Send reports");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "ReportsTest", 
+      description: "Generate and Send reports", 
+      logAdapter: logAdapter});
   }
 
 
@@ -14,7 +17,7 @@ export default class GenerateReportsTest extends BaseTest {
 
       await this.forceSendPeriodicReport(driver);
       await driver.pause(15000);
-      const logs  = this.logs();
+      const logs  = await this.logs();
 
       let status = TestStatus.PASS;
 

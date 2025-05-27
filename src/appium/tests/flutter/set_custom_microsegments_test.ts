@@ -1,10 +1,11 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import {byValueKey} from "appium-flutter-finder";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class CustomMicroSegmentsTest extends BaseTest {
-  constructor() {
-    super("CustomMicroSegmentsTest", "Set and get custom microsegments");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "CustomMicroSegmentsTest", description: "Set and get custom microsegments", logAdapter: logAdapter});
   }
 
 
@@ -19,7 +20,7 @@ export default class CustomMicroSegmentsTest extends BaseTest {
       await driver.elementClick(buttonFinder);
       await driver.pause(2000);
 
-      const logs = this.logs();
+      const logs = await this.logs();
       let status = TestStatus.PASS;
 
 

@@ -1,11 +1,14 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import { EventEmitterImpl } from "../../services/event_emitter.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 const flutterFinder = require("appium-flutter-finder");
 
 export default class InstallAndRun extends BaseTest {
-  constructor() {
-    super("InstallAndRun", "Verify if start button is visible");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "InstallAndRun", 
+      description: "Verify if start button is visible", 
+      logAdapter: logAdapter});
   }
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
@@ -16,7 +19,7 @@ export default class InstallAndRun extends BaseTest {
          await driver.execute('flutter:clearTimeline');
          await driver.execute('flutter:forceGC');
         const capabilities = JSON.parse(JSON.stringify(driver.capabilities));
-        const logs: string = super.logs();
+        const logs = await this.logs();
         
         this.eventEmitter.log(`appPackage - ${capabilities["appPackage"]}`)
 

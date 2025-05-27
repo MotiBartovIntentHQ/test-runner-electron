@@ -1,6 +1,7 @@
 import { remote, Browser } from "webdriverio";
 import { EventEmitter, EventEmitterImpl } from "../services/event_emitter";
-import * as fs from "fs";
+import { DeviceLogAdapter } from "../services/log_adapter/log_adapter";
+
 
 export interface TestResult {
   test: string;
@@ -17,11 +18,13 @@ export abstract class BaseTest {
     eventEmitter : EventEmitter = EventEmitterImpl.getInstance();
     name: string;
     description: string;
+    protected deviceLogAdater? : DeviceLogAdapter;
     protected currentDir = process.cwd();
 
-    constructor(name: string, description: string) {
+    constructor({name, description, logAdapter} : {name: string, description: string, logAdapter?: DeviceLogAdapter}) {
       this.name = name;
       this.description = description;
+      this.deviceLogAdater = logAdapter;
     }
 
 
@@ -29,8 +32,8 @@ export abstract class BaseTest {
       return this.currentDir;
     }
 
-    protected logs() : string{
-      return fs.readFileSync(`${this.getCurrentDir()}/logcat_dump.txt`, "utf8");
+    protected async logs() : Promise<string> {
+      return this.deviceLogAdater ? await this.deviceLogAdater.readLog() : ""
     }
   
     abstract execute(driver: WebdriverIO.Browser): Promise<TestResult>;

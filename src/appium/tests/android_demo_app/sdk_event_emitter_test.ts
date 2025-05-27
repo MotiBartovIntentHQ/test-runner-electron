@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class SdkEventEmitterTest extends BaseTest {
-  constructor() {
-    super("SdkEventEmitterTest", "SDK Event Emitter Test");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "SdkEventEmitterTest", 
+      description: "SDK Event Emitter Test", 
+      logAdapter: logAdapter});
   }
 
 
@@ -11,7 +14,7 @@ export default class SdkEventEmitterTest extends BaseTest {
     this.eventEmitter.log("SdkEventEmitterTest");
 
     try {
-      const logs = this.logs();
+      const logs = await this.logs();
       const registerMessageListenerPrompt = `setMessageListener: com.anagog.jedai.jedaidemo.MainActivity`
       
       let status = TestStatus.PASS;

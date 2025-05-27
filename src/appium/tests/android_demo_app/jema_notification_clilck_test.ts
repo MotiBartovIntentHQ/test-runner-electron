@@ -1,11 +1,13 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class JemaNotifiactionClick extends BaseTest {
-  constructor() {
-    super("ConfigDownloadTest", "Verifying remote config download successfully");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "ConfigDownloadTest", 
+      description: "Verifying remote config download successfully", 
+      logAdapter: logAdapter});
   }
-
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     console.log("execute JemaNotifiactionClick");
@@ -14,7 +16,7 @@ export default class JemaNotifiactionClick extends BaseTest {
       const notificationClickPrompt = "Notification clicked for campaign:";
 
       const jeamOverallClicked = "about to get stat by query: JeMAEvents.overall.clicked"
-      let logs = this.logs();
+      let logs = await this.logs();
       let testStatus = TestStatus.FAIL;
 
       if(logs.includes(notificationClickPrompt)){
@@ -30,7 +32,7 @@ export default class JemaNotifiactionClick extends BaseTest {
 
       await this.openAndClickNotification(driver);
 
-      logs = this.logs();
+      logs = await this.logs();
 
       if(logs.includes("Notification clicked for campaign:") ){
         console.log("Campaign triggered successfully")

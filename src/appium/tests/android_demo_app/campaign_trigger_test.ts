@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class CampaignTriggerTest extends BaseTest {
-  constructor() {
-    super("CampaignTriggerTest", "Verifying campaign trigger");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "CampaignTriggerTest", 
+      description: "Verifying campaign trigger", 
+      logAdapter: logAdapter});
   }
 
 
@@ -17,7 +20,7 @@ export default class CampaignTriggerTest extends BaseTest {
       await driver.activateApp('com.anagog.jedai.jedaidemo');
       await driver.pause(15000);
 
-      const logs = this.logs();
+      const logs = await this.logs();
 
       let testStatus = TestStatus.FAIL;
 

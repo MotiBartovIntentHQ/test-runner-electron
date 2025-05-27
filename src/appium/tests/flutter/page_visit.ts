@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class PageVisitTest extends BaseTest {
-  constructor() {
-    super("PageVisitTest", "Verifying PageVisit and PageTracker");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "PageVisitTest", 
+      description: "Verifying PageVisit and PageTracker", 
+      logAdapter: logAdapter});
   }
 
 
@@ -12,7 +15,6 @@ export default class PageVisitTest extends BaseTest {
     try {
 
 
-      const currentDir = process.cwd();
      
       const pageVisit = "onMethodCall: method: enterPage, arguments: {pageName=HomeScreen}";
       const eventIdentifier = " identifier='PageVisit'";
@@ -22,7 +24,7 @@ export default class PageVisitTest extends BaseTest {
 
       const pageLastVisitLambdaLog = "about to run event[PageVisit]"
   
-      let logs = this.logs();
+      let logs = await this.logs();
       let testStatus = TestStatus.PASS;
 
       if(!logs.includes(pageLastVisitDateLog)){

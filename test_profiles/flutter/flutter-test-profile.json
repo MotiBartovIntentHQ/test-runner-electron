@@ -15,7 +15,7 @@
   {
     "name": "Config Download Test",
     "description": "Verify remote config download",
-    "testPath": "./tests/config_download_test.js",
+    "testPath": "./tests/android_demo_app/config_download_test.js",
     "enabled": true,
     "quit_on_fail": true
   },
@@ -57,7 +57,7 @@
   {
     "name": "Manifest Download Test",
     "description": "Verify Manifest download",
-    "testPath": "./tests/manifest_download_test.js",
+    "testPath": "./tests/android_demo_app/manifest_download_test.js",
     "enabled": true,
     "quit_on_fail": true
   },

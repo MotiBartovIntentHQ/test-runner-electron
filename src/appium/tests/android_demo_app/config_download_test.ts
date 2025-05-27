@@ -1,17 +1,21 @@
+import { DeviceLogAdapter } from "src/appium/services/log_adapter/log_adapter.js";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 
 export default class ConfigDownloadTest extends BaseTest {
-  constructor() {
-    super("ConfigDownloadTest", "Verifying remote config download successfully");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({
+      name: "ConfigDownloadTest",
+      description: "Verifying remote config download successfully",
+      logAdapter: logAdapter
+    });
   }
-
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     this.eventEmitter.log(`Execute Config Download Test`);
 
     try {
 
-      const logs = this.logs();
+      const logs = await this.logs();
       let testStatus = TestStatus.PASS;
       
       if(!logs.includes("Successfully downloaded config from server")){
