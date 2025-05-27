@@ -1,7 +1,4 @@
-import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import { execSync } from "child_process";
-import { remote, Browser } from "webdriverio";
 import { NativeDriverHolder } from "../../services/native_driver_holder.js";
 import { byValueKey } from "appium-flutter-finder";
 import { swipeAndroidApp } from "../../services/app_swiper.js";
