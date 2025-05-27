@@ -10,10 +10,14 @@ import {ProfileManagerImpl as profileManager} from "./core/profile-manager/profi
 import { EventEmitterImpl } from "./services/event_emitter.js";
 import { emit } from "process";
 import { formatMessage } from "./services/utils.js";
+import { DeviceLogAdapter } from "./services/log_adapter/log_adapter.js";
+import { AndroidLogAdapter } from "./services/log_adapter/android_log_adapter.js";
+import { LogAdapterFactoryImpl } from "./services/log_adapter/log_adapter_factory.js";
 // 🔹 Set up CSV Writer
 
 const eventEmitter = EventEmitterImpl.getInstance();
 
+const deviceLoggerFactory = new LogAdapterFactoryImpl()
 const resultsPath = path.join(__dirname, "test_results.csv");
 const csv = createObjectCsvWriter({
   path: resultsPath,
@@ -31,12 +35,11 @@ const APPIUM_SERVER = "http://127.0.0.1:4723/wd/hub";
 
 // console.log("All args:", process.argv);
 
-const currentDir = process.cwd();
-
 const apkPath = process.argv[3];
 
 // 🔹 Desired Capabilities
 
+let deviceLogAdapter: DeviceLogAdapter
 
   (async () => {
     let driver : WebdriverIO.Browser | null = null;
@@ -52,7 +55,7 @@ const apkPath = process.argv[3];
       eventEmitter.log(`testProfile: ${JSON.stringify(testProfile)}`);
 
       const capabilities = {
-        platformName: `Android`,
+        platformName: testProfile.platform,
         'appium:deviceName': 'emulator-5554', // Change to your device name from `adb devices`
         'appium:app': apkPath, // Update with the APK path
         'appium:appPackage': testProfile.package_name, // Replace with actual package name
@@ -65,20 +68,21 @@ const apkPath = process.argv[3];
       };
 
       driver = await setupDriver(capabilities)
-      await initializeLog(driver);
-     
+      deviceLogAdapter = await initializeLog(testProfile.package_name, testProfile);
+      
       let testCases = testProfile.tests.filter(item => item.enabled);
         for(let index = 0; index < testCases.length; index++) {
 
         const testInfo = testCases[index];
         eventEmitter.formattedLog(`🔹 Running ${testInfo.name} test`)
         eventEmitter.testStart(index)
+
         try {
           // 🔹 Dynamically import the test class
+
           const TestModule = await import(testInfo.testPath);
           const TestClass = TestModule.default || TestModule[testInfo.name];
-
-          const testInstance: BaseTest = new TestClass();
+          const testInstance: BaseTest = new TestClass({logAdapter: deviceLogAdapter});
   
           // 🔹 Execute the test
           const result = await testInstance.execute(driver);
@@ -143,10 +147,10 @@ const apkPath = process.argv[3];
       return driver;
   }
 
-async function initializeLog(driver: WebdriverIO.Browser){
-    await driver.pause(1000);
-    const packageName = await (driver as any).getAppPackageName();
-    startLogcat(packageName)
+async function initializeLog(applicationID: string, testProfile: TestProfile) : Promise<DeviceLogAdapter>{
+    const logAdapter = deviceLoggerFactory.provideLogAdapter(testProfile.platform)
+    logAdapter.startDeviceLogger(applicationID)
+    return logAdapter
 }
 
 function deleteFileIfExists(filePath: PathLike) {

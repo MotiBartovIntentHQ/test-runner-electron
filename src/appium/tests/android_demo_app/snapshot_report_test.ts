@@ -1,18 +1,20 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class SnapshotReportTest extends BaseTest {
-  constructor() {
-    super("SnapshotReportTest", "Generate Snapshot Report Test");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "SnapshotReportTest", 
+      description: "Generate Snapshot Report Test", 
+      logAdapter: logAdapter});
   }
-
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     this.eventEmitter.log("Reports Test");
 
     try {
       await driver.pause(10000);
-      const logs = this.logs();
+      const logs = await this.logs();
       
       let status = TestStatus.PASS;
       if(!logs.includes("about to generate report: factoryName: MicrosegmentsSnapshot")){

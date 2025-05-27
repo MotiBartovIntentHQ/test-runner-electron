@@ -1,10 +1,13 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 import * as fs from "fs";
 
 export default class OnboardingTest extends BaseTest {
-  constructor() {
-    super("OnboardingTest", "Verify OnBoarding status ");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "OnboardingTest", 
+      description: "Verify OnBoarding status", 
+      logAdapter: logAdapter});
   }
 
 
@@ -14,7 +17,7 @@ export default class OnboardingTest extends BaseTest {
     try {
       await this.startOnboardingFromMenu(driver);
       await driver.pause(5000);
-      const logs = this.logs();
+      const logs = await this.logs();
       let status = TestStatus.PASS;
       const expectedLogIndicator = "DuringOnboarding"; // or the exact phrase to match
 

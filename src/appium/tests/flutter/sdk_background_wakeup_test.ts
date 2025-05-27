@@ -4,10 +4,11 @@ import { clearLogcat, startLogcat, stopLogcat } from '../../services/logcat.js';
 import { NativeDriverHolder } from "../../services/native_driver_holder.js";
 import { spawn, execSync, ChildProcessByStdio } from "child_process";
 import { swipeAndroidApp } from "../../services/app_swiper.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class SdkBackgroundWakeupTest extends BaseTest {
-  constructor() {
-    super("SdkWakeupTest", "SDK Wakeup test");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "SdkWakeupTest", description: "SDK Wakeup test", logAdapter: logAdapter});
   }
 
 
@@ -49,7 +50,7 @@ export default class SdkBackgroundWakeupTest extends BaseTest {
 
       await nativeDriver.pause(1500); // wait 1 second between iterations
       await driver.pause(1500);
-      let logs = this.logs()
+      let logs = await this.logs()
 
       if(!logs.includes("SDK State Changed from DISABLED to RUNNING")){
         status = TestStatus.FAIL

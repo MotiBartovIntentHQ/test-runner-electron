@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class MicrosegmentsReportsTest extends BaseTest {
-  constructor() {
-    super("MicrosegmentsReportTest", "Generate and send microsegments report");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "MicrosegmentsReportTest", 
+      description: "Generate and send microsegments report", 
+      logAdapter: logAdapter});
   }
 
 
@@ -13,7 +16,7 @@ export default class MicrosegmentsReportsTest extends BaseTest {
     try {
 
       await driver.pause(15000);
-      const logs = this.logs()
+      const logs = await this.logs()
       
       let status = TestStatus.PASS;
       if(!logs.includes("About to generate report: StatsIReportFactory")){

@@ -3,10 +3,13 @@ import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import { execSync } from "child_process";
 import { remote, Browser } from "webdriverio";
 import { NativeDriverHolder } from "../../services/native_driver_holder.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class JemaNotifiactionClick extends BaseTest {
-  constructor() {
-    super("NotificationClickTest", "Verifying Campaign notification");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "NotificationClickTest", 
+      description: "Verifying Campaign notification", 
+      logAdapter: logAdapter});
   }
 
   
@@ -19,7 +22,7 @@ export default class JemaNotifiactionClick extends BaseTest {
     try {
       const notificationClickPrompt = "Notification clicked for campaign:";
       const jeamOverallClicked = "about to get stat by query: JeMAEvents.overall.clicked"
-      let logs = this.logs();
+      let logs = await this.logs();
       let testStatus = TestStatus.FAIL;
 
       if(logs.includes(notificationClickPrompt)){
@@ -34,7 +37,7 @@ export default class JemaNotifiactionClick extends BaseTest {
       }
 
       await this.openAndClickNotification(nativeDriver);
-      logs = this.logs();
+      logs = await this.logs();
       if(logs.includes("Notification clicked for campaign:") ){
         console.log("Campaign triggered successfully")
         testStatus = TestStatus.PASS;

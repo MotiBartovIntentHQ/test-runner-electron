@@ -1,10 +1,13 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
 import {byValueKey} from "appium-flutter-finder";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class FireMicroMomentTest extends BaseTest {
-  constructor() {
-    super("FireMicroMomentTest", "Fire micromoment");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "FireMicroMomentTest", 
+      description: "Fire micromoment", 
+      logAdapter: logAdapter});
   }
 
 
@@ -19,7 +22,7 @@ export default class FireMicroMomentTest extends BaseTest {
       await driver.elementClick(buttonFinder);
       await driver.pause(1000);
 
-      const logs = this.logs();
+      const logs = await this.logs();
 
       const pluginFireMicroMomentPrompt = "onMethodCall: method: fireMicromoment, arguments: {identifier=cmm_redeposit_event, numericParameters={ConversionValue=40.0}, textParameters={}, booleanParameters={}}"
       const pluginMicroMomentApplicationEventPrompt = 'main INFO fireMicromoment: appEvent:';

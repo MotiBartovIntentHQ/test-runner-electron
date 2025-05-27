@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class FlutterHeadlessEventEmitter extends BaseTest {
-  constructor() {
-    super("FlutterHeadlessEventEmitter", "Flutter headless BackgroundEventEmitter test");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "FlutterHeadlessEventEmitter", 
+      description: "Flutter headless BackgroundEventEmitter test", 
+      logAdapter: logAdapter});
   }
 
 
@@ -11,7 +14,7 @@ export default class FlutterHeadlessEventEmitter extends BaseTest {
     this.eventEmitter.log("FlutterPluginEventEmitter test");
 
     try {
-      const logs = this.logs();
+      const logs = await this.logs();
       
       let status = TestStatus.PASS;
     

@@ -1,9 +1,12 @@
 import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js"
 
 export default class CampaignDownloadTest extends BaseTest {
-  constructor() {
-    super("ConfigDownloadTest", "Verifying remote config download successfully");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "ConfigDownloadTest", 
+      description: "Verifying remote config download successfully", 
+      logAdapter: logAdapter});
   }
 
 
@@ -15,7 +18,7 @@ export default class CampaignDownloadTest extends BaseTest {
     try {
       const currentDir = process.cwd();
       await driver.pause(10000);
-      const logs = this.logs();
+      const logs = await this.logs();
 
       let testStatus = TestStatus.FAIL;
       // com.anagog.jema.flutter2.sampleapp

@@ -1,14 +1,13 @@
-import { log } from "console";
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
-import { execSync } from "child_process";
-import { remote, Browser } from "webdriverio";
 import { NativeDriverHolder } from "../../services/native_driver_holder.js";
 import { byValueKey } from "appium-flutter-finder";
-import { clearLogcat, startLogcat, stopLogcat } from "../../services/logcat.js";
 import { swipeAndroidApp } from "../../services/app_swiper.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 export default class DeepLinkNotificationClick extends BaseTest {
-  constructor() {
-    super("DeepLinkNotificationClick", "Verifying DeepLink Click notification");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "DeepLinkNotificationClick", 
+      description: "Verifying DeepLink Click notification", 
+      logAdapter: logAdapter});
   }
 
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
@@ -27,8 +26,8 @@ export default class DeepLinkNotificationClick extends BaseTest {
     try {
       let testStatus = TestStatus.PASS;
 
-      stopLogcat();
-      clearLogcat();
+      await this.deviceLogAdapter.stopDeviceLogger()
+      await this.deviceLogAdapter.clear();
       
       await swipeAndroidApp(nativeDriver)
       
@@ -37,12 +36,12 @@ export default class DeepLinkNotificationClick extends BaseTest {
       await NativeDriverHolder.destroy()    
       nativeDriver = await NativeDriverHolder.getInstance()
       let appPackage = await nativeDriver.getCurrentPackage()
-      startLogcat(appPackage)
+      this.deviceLogAdapter.startDeviceLogger(appPackage)
 
       await driver.pause(2000);
       const deepLinkLog = "About to handle linkUrl: "
 
-      let logs = this.logs();
+      let logs = await this.logs();
 
       if(!logs.includes(deepLinkLog)){
         return {

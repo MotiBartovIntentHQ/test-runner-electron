@@ -1,8 +1,9 @@
 import { BaseTest, TestResult, TestStatus } from "../../core/base_test.js";
+import { DeviceLogAdapter } from "../../services/log_adapter/log_adapter.js";
 
 export default class SdkInitialState extends BaseTest {
-  constructor() {
-    super("SdkInitialState", "Verify SDK disabled at startup");
+  constructor({ logAdapter }: { logAdapter: DeviceLogAdapter }) {
+    super({name: "SdkInitialState", description: "Verify SDK disabled at startup", logAdapter: logAdapter});
   }
 
 
@@ -11,7 +12,7 @@ export default class SdkInitialState extends BaseTest {
 
     try {
 
-      const logs = this.logs()
+      const logs = await this.logs()
       let testStatus = TestStatus.PASS;
       
       if(!logs.includes("onSdkStateChanged: RUNNING")){
