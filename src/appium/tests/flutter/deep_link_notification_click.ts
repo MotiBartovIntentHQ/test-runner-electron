@@ -26,8 +26,8 @@ export default class DeepLinkNotificationClick extends BaseTest {
     try {
       let testStatus = TestStatus.PASS;
 
-      await this.deviceLogAdater?.stopDeviceLogger()
-      await this.deviceLogAdater?.clear();
+      await this.deviceLogAdapter.stopDeviceLogger()
+      await this.deviceLogAdapter.clear();
       
       await swipeAndroidApp(nativeDriver)
       
@@ -36,7 +36,7 @@ export default class DeepLinkNotificationClick extends BaseTest {
       await NativeDriverHolder.destroy()    
       nativeDriver = await NativeDriverHolder.getInstance()
       let appPackage = await nativeDriver.getCurrentPackage()
-      this.deviceLogAdater?.startDeviceLogger(appPackage)
+      this.deviceLogAdapter.startDeviceLogger(appPackage)
 
       await driver.pause(2000);
       const deepLinkLog = "About to handle linkUrl: "
