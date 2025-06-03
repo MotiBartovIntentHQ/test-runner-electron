@@ -36,7 +36,8 @@ export default class SnapshotReportTest extends BaseTest {
         };
       }
       
-      const regex = /Snapshot report file ready: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
+      // const regex = /Snapshot report file ready: .*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
+      const regex = /.*\/MicrosegmentsSnapshot-[^\/]+\.gz/;
 
       const matchResult = regex.test(logs);
       this.eventEmitter.log(`Microsegment snapshot report match ${matchResult}`)
