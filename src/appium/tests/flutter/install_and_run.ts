@@ -11,6 +11,7 @@ export default class InstallAndRun extends BaseTest {
       logAdapter: logAdapter});
   }
 
+  
   async execute(driver: WebdriverIO.Browser): Promise<TestResult> {
     try {
         await driver.pause(1000);
